@@ -11,7 +11,7 @@ RUN dnf install -y https://www.pgpool.net/yum/rpms/4.6/redhat/rhel-9-x86_64/pgpo
 #RUN yum install -y https://download.postgresql.org/pub/repos/yum/${PGVER}/redhat/rhel-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 # Postgres repository
 RUN dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm epel-release
-# Disable module postgresql, needed on Centos 8
+# Disable module postgresql to avoid conflicts with pgdg repo
 RUN dnf module disable -y postgresql
 RUN dnf install -y postgresql${PGVER} pgpool-II-pg${PGVER}-${PGPOOLVER} pgpool-II-pg${PGVER}-extensions-${PGPOOLVER} \
     pgpool-II-pg${PGVER}-debuginfo-${PGPOOLVER} epel-release sudo vi openssh openssh-clients iproute ; \
