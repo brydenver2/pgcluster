@@ -1,11 +1,11 @@
 FROM centos:8
 MAINTAINER ptim007@yahoo.com
-ENV MAJORVER=12
-ENV MINORVER=7
-ENV PGVER=12
-ENV REPMGRVER=5.1.0
-ENV PGPOOLMAJOR=4.1
-ENV PGPOOLVER=4.1.1
+ENV MAJORVER=17
+ENV MINORVER=2
+ENV PGVER=17
+ENV REPMGRVER=5.5.0
+ENV PGPOOLMAJOR=4.6
+ENV PGPOOLVER=4.6.0
 ENV docker=yes
 RUN dnf update -y ; dnf clean all && rm -rf /var/cache/dnf
 RUN dnf install -y epel-release libxslt sudo openssh-server openssh-clients jq passwd rsync && \
@@ -19,7 +19,7 @@ RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
 RUN useradd -u 50010 postgres
 RUN dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 RUN dnf install -y postgresql${MAJORVER} postgresql${MAJORVER}-server  postgresql${MAJORVER}-contrib ; dnf clean all
-RUN dnf install -y https://www.pgpool.net/yum/rpms/4.1/redhat/rhel-8-x86_64/pgpool-II-release-4.1-1.noarch.rpm
+RUN dnf install -y https://www.pgpool.net/yum/rpms/4.6/redhat/rhel-8-x86_64/pgpool-II-release-4.6-1.noarch.rpm
 # pgpool extensions
 RUN dnf install -y pgpool-II-pg${MAJORVER}-${PGPOOLVER} pgpool-II-pg${MAJORVER}-extensions-${PGPOOLVER}; dnf clean all; rm -rf /var/cache/dnf
 # repmgr: installed from 2ndquadrant repo will install repmgr4
