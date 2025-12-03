@@ -1,4 +1,4 @@
-FROM rockylinux:9
+FROM debian:12
 MAINTAINER ptim007@yahoo.com
 ENV MAJORVER=17
 ENV MINORVER=2
@@ -7,39 +7,40 @@ ENV REPMGRVER=5.5.0
 ENV PGPOOLMAJOR=4.6
 ENV PGPOOLVER=4.6.0
 ENV docker=yes
-RUN dnf update -y ; dnf clean all && rm -rf /var/cache/dnf
-RUN dnf install -y epel-release libxslt sudo openssh-server openssh-clients jq passwd rsync && \
-    dnf install -y systemd-sysv iproute python3 hostname inotify-tools dnf-utils which && \
-    dnf clean all && rm -rf /var/cache/dnf
-RUN dnf -qy module disable postgresql
-#RUN easy_install supervisor
-RUN pip3 install supervisor
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get upgrade -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    libxslt1.1 sudo openssh-server openssh-client jq passwd rsync \
+    systemd iproute2 python3 python3-pip hostname inotify-tools wget curl \
+    ca-certificates gnupg lsb-release && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN pip3 install --break-system-packages supervisor
 RUN mkdir /var/run/sshd
 RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
 RUN useradd -u 50010 postgres
-RUN dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-RUN dnf install -y postgresql${MAJORVER} postgresql${MAJORVER}-server  postgresql${MAJORVER}-contrib ; dnf clean all
-RUN dnf install -y https://www.pgpool.net/yum/rpms/4.6/redhat/rhel-9-x86_64/pgpool-II-release-4.6-1.noarch.rpm
-# pgpool extensions
-RUN dnf install -y pgpool-II-pg${MAJORVER}-${PGPOOLVER} pgpool-II-pg${MAJORVER}-extensions-${PGPOOLVER}; dnf clean all; rm -rf /var/cache/dnf
-# repmgr: installed from 2ndquadrant repo will install repmgr4
-RUN curl https://dl.2ndquadrant.com/default/release/get/${MAJORVER}/rpm | bash
-RUN dnf install -y --enablerepo=2ndquadrant-dl-default-release-pg${MAJORVER} --disablerepo=pgdg${MAJORVER} repmgr${MAJORVER}-${REPMGRVER} && dnf clean all && rm -rf /var/cache/dnf
-RUN chown postgres:postgres /var/log/repmgr
+# Install PostgreSQL repository
+RUN install -d /usr/share/postgresql-common/pgdg && \
+    curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc && \
+    sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+RUN apt-get update && apt-get install -y postgresql-${MAJORVER} postgresql-contrib-${MAJORVER} && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install pgpool2 and extensions
+RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-pgpool2 pgpool2 && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install repmgr
+RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-repmgr && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /var/log/repmgr && chown postgres:postgres /var/log/repmgr
 RUN mkdir -p /data /backup /archive && chown -R postgres:postgres /data /backup /archive && chmod 755 /data /archive
 ENV PGDATA /data
-ENV PATH=$PATH:/usr/pgsql-${MAJORVER}/bin
+ENV PATH=$PATH:/usr/lib/postgresql/${MAJORVER}/bin
 ENV LANG=en_US.UTF-8
-RUN usermod -G wheel -a postgres 
+RUN usermod -aG sudo postgres 
 RUN echo "Defaults:postgres !requiretty" > /etc/sudoers.d/postgres && \
     echo "postgres ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/postgres
-RUN sed -i -e "s/^%wheel/#%wheel/" -e "/^#.*%wheel.*NOPASSWD/s/^#.*%wheel/%wheel/" /etc/sudoers
 RUN echo postgres:postgres | chpasswd
 RUN echo root:postgres | chpasswd
 # .bashrc is needed for connections via ssh
-RUN  echo "export PATH=\$PATH:/usr/pgsql-${MAJORVER}/bin" >  /etc/profile.d/postgres.sh
-RUN  echo "[ -f /etc/profile ] && source /etc/profile" >> /home/postgres/.bashrc && \
-     echo "export PGDATA=/data PGVER=${PGVER} " >> /home/postgres/.bashrc
+RUN echo "export PATH=\$PATH:/usr/lib/postgresql/${MAJORVER}/bin" > /etc/profile.d/postgres.sh
+RUN echo "[ -f /etc/profile ] && source /etc/profile" >> /home/postgres/.bashrc && \
+    echo "export PGDATA=/data PGVER=${PGVER} " >> /home/postgres/.bashrc
 #
 # this localedef command is needed because of bug in centos docker image?
 #
@@ -61,8 +62,8 @@ RUN echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
 RUN sed -i -e "s/^#Port 22/Port 222/" /etc/ssh/sshd_config
 ADD ssh_keys /home/postgres/.ssh 
 RUN chown -R postgres:postgres /home/postgres/.ssh && chmod 700 /home/postgres/.ssh && chmod 644 /home/postgres/.ssh/* && chmod 600 /home/postgres/.ssh/id_rsa
-RUN rm /run/nologin
-ENV PATH=$PATH:/usr/pgsql-${MAJORVER}/bin
+RUN rm -f /run/nologin
+ENV PATH=$PATH:/usr/lib/postgresql/${MAJORVER}/bin
 ADD initdb.sh /scripts/initdb.sh
 EXPOSE 5432
 EXPOSE 222

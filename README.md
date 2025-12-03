@@ -2,7 +2,7 @@
 
 **PostgreSQL Version: 17** (with Pgpool-II 4.6 and repmgr 5.5)
 
-**Base OS: Rocky Linux 9** (upgraded from CentOS 8 which is EOL)
+**Base OS: Debian 12 (Bookworm)** (upgraded from CentOS 8 which is EOL)
 
 > **Note on Data Directories:** The examples in this README use `/u01/pg17/data` for the data directory path. If you're upgrading from an older version and want to keep your existing data, keep using your current path (e.g., `/u01/pg10/data`). The path is configurable via the `PG_BACKEND_NODE_LIST` environment variable and volume mount paths in the docker-compose files.
 

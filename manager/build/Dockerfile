@@ -1,6 +1,7 @@
-FROM rockylinux:9 as builder
+FROM debian:12 as builder
 MAINTAINER p.timmermans@evs.com
-RUN dnf upgrade -y && dnf clean all && rm -rf /var/cache/dnf
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get upgrade -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 ADD https://nodejs.org/dist/v12.16.2/node-v12.16.2-linux-x64.tar.xz ./
 RUN tar xvf /node-v12.16.2-linux-x64.tar.xz && rm /node-v12.16.2-linux-x64.tar.xz 
 ENV PATH $PATH:/node-v12.16.2-linux-x64/bin
@@ -18,8 +19,9 @@ RUN cd /tmp/client && yarn install
 RUN cd /tmp/client && yarn build
 RUN mv /tmp/client/build /opt/manager/app
 
-FROM rockylinux:9 
-RUN dnf upgrade -y && dnf install -y openssh-clients && dnf clean all && rm -rf /var/cache/dnf
+FROM debian:12 
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get upgrade -y && apt-get install -y openssh-client && apt-get clean && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /node-v12.16.2-linux-x64 /node-v12.16.2-linux-x64
 ENV PATH $PATH:/node-v12.16.2-linux-x64/bin
 ADD ssh_keys /root/.ssh
