@@ -1,5 +1,11 @@
 # pg-cluster
 
+**PostgreSQL Version: 17** (with Pgpool-II 4.6 and repmgr 5.5)
+
+**Base OS: Debian 12 (Bookworm)** (upgraded from CentOS 8 which is EOL)
+
+> **Note on Data Directories:** The examples in this README use `/u01/pg17/data` for the data directory path. If you're upgrading from an older version and want to keep your existing data, keep using your current path (e.g., `/u01/pg10/data`). The path is configurable via the `PG_BACKEND_NODE_LIST` environment variable and volume mount paths in the docker-compose files.
+
 Postgres streaming replication with pgpool and/or repmgr for the automated failover. The images can be used in docker swarm cluster or via docker run outside the swarm. When running the images in a docker swarm, the HA of pgpool can be either via the traditional pgpool watchdog mode (with a VIP) or via the swarm (but I found too many edge cases in this case). When the docker images are used outside docker swarm then pgpool is made HA via the traditional watchdog mode (with a VIP).
 
 In the post http://saule1508.github.io/pgpool/ I describe a 3 nodes cluster step by step, but without using docker. So essentially the blog post does step by step what is in the Dockerfile of postgres and pgpool.
@@ -102,7 +108,7 @@ to `/opt/manager`. Put also a dummy command, like bash, to keep the container ru
 To change the server part, one can change the docker-compose and put a dummy command for the manager service in order to keep it running: `command: tail -f /etc/passwd` and then get into the manager container with `docker exec -ti`. One can stop/start the backend manager app with node `server.js`. But before the env variable PG_BACKEND_NODE_LIST must be set.
 
 ```
-export PG_BACKEND_NODE_LIST=0:pg01:5432:1:/u01/pg10/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/u01/pg10/data:ALLOW_TO_FAILOVER
+export PG_BACKEND_NODE_LIST=0:pg01:5432:1:/u01/pg17/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/u01/pg17/data:ALLOW_TO_FAILOVER
 export REPMGRPWD=rep123
 
 cd /opt/manager/server
@@ -130,9 +136,9 @@ pgpool can also be used in the traditional active/passive node, i.e. the watchdo
 
 The following environment variables are important to properly set-up pgpool
 
-* PG_BACKEND_NODE_LIST: 0:pg01:9999:1:/u01/pg10/data:ALLOW_TO_FAILOVER, 1:pg02, etc.
+* PG_BACKEND_NODE_LIST: 0:pg01:9999:1:/u01/pg17/data:ALLOW_TO_FAILOVER, 1:pg02, etc.
                 # csv list of backend postgres databases, each backend db contains (separated by :)
-                # number (start with 0):host name:pgpool port (default 9999):data dir (default /u01/pg10/data):flag ALLOW_TO_FAILOVER or DISALLOW_TO_FAILOVER
+                # number (start with 0):host name:pgpool port (default 9999):data dir (default /u01/pg17/data):flag ALLOW_TO_FAILOVER or DISALLOW_TO_FAILOVER
                 # not needed when there is a single postgres DB
 * PGP_NODE_NAME: pgpool01
 * REPMGRPWD: repmgr_pwd (must correspond to the value in postgres of course)
