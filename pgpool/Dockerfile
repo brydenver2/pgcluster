@@ -4,13 +4,12 @@ ENV PGVER=17
 ENV PGPOOLMAJOR=4.6
 ENV PGPOOLVER=4.6.0
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get upgrade -y && apt-get clean && rm -rf /var/lib/apt/lists/*
-RUN apt-get update && apt-get install -y passwd sudo && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y passwd sudo ca-certificates gnupg lsb-release curl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN groupadd -g 50010 postgres && useradd -u 50010 -g postgres postgres 
 RUN usermod -aG sudo postgres && echo "postgres:postgres" | chpasswd
 # Install PostgreSQL repository
-RUN apt-get update && apt-get install -y ca-certificates gnupg lsb-release curl && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN install -d /usr/share/postgresql-common/pgdg && \
     curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc && \
     sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'

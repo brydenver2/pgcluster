@@ -8,13 +8,13 @@ ENV PGPOOLMAJOR=4.6
 ENV PGPOOLVER=4.6.0
 ENV docker=yes
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get upgrade -y && apt-get clean && rm -rf /var/lib/apt/lists/*
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y \
     libxslt1.1 sudo openssh-server openssh-client jq passwd rsync \
     systemd iproute2 python3 python3-pip hostname inotify-tools wget curl \
-    ca-certificates gnupg lsb-release && \
+    ca-certificates gnupg lsb-release supervisor locales && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-RUN pip3 install --break-system-packages supervisor
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 RUN mkdir /var/run/sshd
 RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
 RUN useradd -u 50010 postgres
@@ -41,10 +41,6 @@ RUN echo root:postgres | chpasswd
 RUN echo "export PATH=\$PATH:/usr/lib/postgresql/${MAJORVER}/bin" > /etc/profile.d/postgres.sh
 RUN echo "[ -f /etc/profile ] && source /etc/profile" >> /home/postgres/.bashrc && \
     echo "export PGDATA=/data PGVER=${PGVER} " >> /home/postgres/.bashrc
-#
-# this localedef command is needed because of bug in centos docker image?
-#
-#RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 RUN echo "*:*:postgres:postgres" > /home/postgres/.pcppass && chown postgres:postgres /home/postgres/.pcppass && chmod 600 /home/postgres/.pcppass
 ADD scripts /scripts
 ADD pgconfig /opt/pgconfig
