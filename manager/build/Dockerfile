@@ -1,4 +1,4 @@
-FROM centos:8 as builder
+FROM rockylinux:9 as builder
 MAINTAINER p.timmermans@evs.com
 RUN dnf upgrade -y && dnf clean all && rm -rf /var/cache/dnf
 ADD https://nodejs.org/dist/v12.16.2/node-v12.16.2-linux-x64.tar.xz ./
@@ -18,7 +18,7 @@ RUN cd /tmp/client && yarn install
 RUN cd /tmp/client && yarn build
 RUN mv /tmp/client/build /opt/manager/app
 
-FROM centos:8 
+FROM rockylinux:9 
 RUN dnf upgrade -y && dnf install -y openssh-clients && dnf clean all && rm -rf /var/cache/dnf
 COPY --from=builder /node-v12.16.2-linux-x64 /node-v12.16.2-linux-x64
 ENV PATH $PATH:/node-v12.16.2-linux-x64/bin

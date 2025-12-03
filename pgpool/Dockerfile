@@ -1,4 +1,4 @@
-FROM centos:8
+FROM rockylinux:9
 MAINTAINER ptim007@yahoo.com
 ENV PGVER=17
 ENV PGPOOLMAJOR=4.6
@@ -7,10 +7,10 @@ RUN dnf update -y ; dnf install -y passwd sudo ; dnf clean all ; rm -rf /var/cac
 RUN groupadd -g 50010 postgres && useradd -u 50010 -g postgres postgres 
 RUN usermod -G wheel -a postgres && echo "postgres" | passwd --stdin postgres
 #RUN yum install -y http://www.pgpool.net/yum/rpms/${PGPOOLMAJOR}/redhat/rhel-8-x86_64/pgpool-II-pg11-${PGPOOLVER}-1pgdg.rhel8.x86_64.rpm
-RUN dnf install -y https://www.pgpool.net/yum/rpms/4.6/redhat/rhel-8-x86_64/pgpool-II-release-4.6-1.noarch.rpm
-#RUN yum install -y https://download.postgresql.org/pub/repos/yum/${PGVER}/redhat/rhel-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+RUN dnf install -y https://www.pgpool.net/yum/rpms/4.6/redhat/rhel-9-x86_64/pgpool-II-release-4.6-1.noarch.rpm
+#RUN yum install -y https://download.postgresql.org/pub/repos/yum/${PGVER}/redhat/rhel-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 # Postgres repository
-RUN dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm epel-release
+RUN dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm epel-release
 # Disable module postgresql, needed on Centos 8
 RUN dnf module disable -y postgresql
 RUN dnf install -y postgresql${PGVER} pgpool-II-pg${PGVER}-${PGPOOLVER} pgpool-II-pg${PGVER}-extensions-${PGPOOLVER} \

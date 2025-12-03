@@ -2,6 +2,8 @@
 
 **PostgreSQL Version: 17** (with Pgpool-II 4.6 and repmgr 5.5)
 
+**Base OS: Rocky Linux 9** (upgraded from CentOS 8 which is EOL)
+
 Postgres streaming replication with pgpool and/or repmgr for the automated failover. The images can be used in docker swarm cluster or via docker run outside the swarm. When running the images in a docker swarm, the HA of pgpool can be either via the traditional pgpool watchdog mode (with a VIP) or via the swarm (but I found too many edge cases in this case). When the docker images are used outside docker swarm then pgpool is made HA via the traditional watchdog mode (with a VIP).
 
 In the post http://saule1508.github.io/pgpool/ I describe a 3 nodes cluster step by step, but without using docker. So essentially the blog post does step by step what is in the Dockerfile of postgres and pgpool.
