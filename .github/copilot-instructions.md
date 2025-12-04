@@ -175,6 +175,8 @@ Key environment variables:
 - **Dependencies**: Use `depends_on` for startup order
 - **Networks**: Custom overlay or bridge networks
 
+**Note on Terminology**: This project uses "master/slave" terminology for historical reasons and compatibility with existing PostgreSQL documentation and tooling. Modern PostgreSQL prefers "primary/replica" or "primary/standby" terminology.
+
 ## File Organization
 
 ```
@@ -303,7 +305,7 @@ npm run lint
 - **Streaming Replication**: Asynchronous by default
 - **Replication Slots**: Used for WAL management
 - **repmgr**: Manages replication topology and metadata
-- **Automatic Failover**: Can be handled by pgpool OR repmgr (pgpool recommended)
+- **Automatic Failover**: Can be handled by pgpool OR repmgr (pgpool recommended for better integration with connection pooling and more stable failover behavior)
 
 ### Pgpool Configuration
 - **Backend Node List**: Defines all PostgreSQL nodes

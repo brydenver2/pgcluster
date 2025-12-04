@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    // Essential for JavaScript/Node.js development
+    // JavaScript/Node.js linting and code quality
     "dbaeumer.vscode-eslint",
     
     // Docker support
