@@ -17,7 +17,7 @@ RUN apt-get update && apt-get upgrade -y && \
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 RUN mkdir /var/run/sshd
 RUN [ -f /etc/ssh/ssh_host_rsa_key ] || ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ''
-RUN useradd -u 50010 postgres
+RUN useradd -u 50010 -m postgres
 # Install PostgreSQL repository
 RUN install -d /usr/share/postgresql-common/pgdg && \
     curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc && \
