@@ -1,6 +1,6 @@
 # pg-cluster
 
-**PostgreSQL Version: 17** (with Pgpool-II 4.6 and repmgr 5.5)
+**PostgreSQL Version: 17.5** (with Pgpool-II 4.6 and repmgr 5.5)
 
 **Base OS: Debian 12 (Bookworm)** (upgraded from CentOS 8 which is EOL)
 
@@ -24,6 +24,29 @@ The postgres docker image contains:
 * repmgr (the repmgr daemon - repmgrd - is optionally started)
 * postgres (!)
 * supervisord.
+
+### SSH Keys for Inter-Node Communication
+
+The cluster uses SSH for secure communication between nodes. SSH keys are pre-configured in the Docker images and are essential for:
+
+* **PostgreSQL Replication**: Standby nodes use SSH to clone data from the primary during initial setup and recovery operations
+* **Pgpool Operations**: Pgpool executes remote commands via SSH during failover, switchover, and node recovery
+* **repmgr Cluster Management**: repmgr uses SSH for cluster operations like standby registration, promotion, and follow operations
+* **Watchdog Mode**: Pgpool instances use SSH to manage the Virtual IP (VIP) on the host system
+
+The SSH keys are stored in:
+- `postgres/ssh_keys/` - Used by PostgreSQL nodes
+- `pgpool/ssh_keys/` - Used by Pgpool nodes  
+- `manager/build/ssh_keys/` - Used by the manager container
+
+**Generating New SSH Keys**: For security, you can generate new SSH keys using the provided script:
+```bash
+./generate-ssh-keys.sh
+```
+
+After generating new keys, rebuild the Docker images with `./build.sh` to incorporate them into the containers.
+
+**Note**: SSH connections use port 222 (not the default port 22) and are configured with `StrictHostKeyChecking=no` to accommodate dynamic container hostnames in Docker environments.
 
 Postgres is replicated with streaming replication, repmgr is used because it brings well documented and tested scripts and it adds some metadata about the cluster that ease monitoring. Automatic failover of postgres can be done either by **repmgr** (repmgrd) or by **pgpool**. Both options seem to have some pros and cons. The recommandation for now is to use ***pgpool*** for automatic failover. After much experimentation I have settled for using pgpool in watchdog mode (VIP), even when using docker swarm. There were simply too much edge cases otherwise.
 

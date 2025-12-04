@@ -1,7 +1,7 @@
 FROM debian:12
 MAINTAINER ptim007@yahoo.com
 ENV MAJORVER=17
-ENV MINORVER=2
+ENV MINORVER=5
 ENV PGVER=17
 ENV REPMGRVER=5.5.0
 ENV PGPOOLMAJOR=4.6
@@ -16,7 +16,7 @@ RUN apt-get update && apt-get upgrade -y && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 RUN mkdir /var/run/sshd
-RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
+RUN [ -f /etc/ssh/ssh_host_rsa_key ] || ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ''
 RUN useradd -u 50010 postgres
 # Install PostgreSQL repository
 RUN install -d /usr/share/postgresql-common/pgdg && \
@@ -57,7 +57,7 @@ RUN echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
 # ssh listen on port 222
 RUN sed -i -e "s/^#Port 22/Port 222/" /etc/ssh/sshd_config
 ADD ssh_keys /home/postgres/.ssh 
-RUN chown -R postgres:postgres /home/postgres/.ssh && chmod 700 /home/postgres/.ssh && chmod 644 /home/postgres/.ssh/* && chmod 600 /home/postgres/.ssh/id_rsa
+RUN chown -R postgres:postgres /home/postgres/.ssh && chmod 700 /home/postgres/.ssh && chmod 644 /home/postgres/.ssh/* && chmod 600 /home/postgres/.ssh/id_rsa && chmod 600 /home/postgres/.ssh/authorized_keys
 RUN rm -f /run/nologin
 ENV PATH=$PATH:/usr/lib/postgresql/${MAJORVER}/bin
 ADD initdb.sh /scripts/initdb.sh
