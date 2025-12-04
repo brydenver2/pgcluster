@@ -1,91 +1,103 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Docker Registry Configuration
-# Set DOCKER_REGISTRY to push images to a registry (required for Portainer and multi-node deployments)
-# Examples:
-#   export DOCKER_REGISTRY=localhost:5000        # Local registry
-#   export DOCKER_REGISTRY=192.168.1.100:5000    # Remote registry
-#   export DOCKER_REGISTRY=myregistry.com:5000   # Custom registry
-#
-# If DOCKER_REGISTRY is not set, images will only be built locally
+# Allow passing registry via CLI: ./build.sh -r myregistry:5000
+DOCKER_REGISTRY="${DOCKER_REGISTRY:-}"
 
-# Check if DOCKER_REGISTRY is set via environment variable, otherwise use default
-if [ -z "$DOCKER_REGISTRY" ]; then
-  # Uncomment and set the line below to use a default registry
-  # DOCKER_REGISTRY=localhost:5000
-  echo "INFO: DOCKER_REGISTRY not set. Images will be built locally only."
-  echo "INFO: To push to a registry, set DOCKER_REGISTRY environment variable:"
-  echo "      export DOCKER_REGISTRY=localhost:5000"
-  echo ""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -r|--registry)
+      if [[ -z "${2:-}" ]]; then
+        echo "ERROR: --registry requires a value"
+        exit 1
+      fi
+      DOCKER_REGISTRY="$2"
+      shift 2
+      ;;
+    -h|--help)
+      echo "Usage: $0 [-r|--registry <host:port>]"
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: $1"
+      echo "Usage: $0 [-r|--registry <host:port>]"
+      exit 1
+      ;;
+  esac
+done
+
+# If there's a .env file, load it (useful for CI/local dev)
+if [ -f .env ]; then
+  # export all variables from .env (simple key=value lines)
+  set -o allexport
+  # shellcheck disable=SC1091
+  source .env
+  set +o allexport
+  # refresh DOCKER_REGISTRY if set by .env and not overridden by CLI/env
+  DOCKER_REGISTRY="${DOCKER_REGISTRY:-${DOCKER_REGISTRY}}"
 fi
 
-VER=`cat version.txt`
+# Trim whitespace (if any)
+if [ -n "${DOCKER_REGISTRY:-}" ]; then
+  DOCKER_REGISTRY="$(echo "$DOCKER_REGISTRY" | xargs)"
+fi
+
+if [ -z "${DOCKER_REGISTRY:-}" ]; then
+  # Uncomment and set the line below to use a default registry (if you want)
+  # DOCKER_REGISTRY=localhost:5000
+  echo "INFO: DOCKER_REGISTRY not set. Images will be built locally only."
+  echo "INFO: To push to a registry, set DOCKER_REGISTRY environment variable or use -r:"
+  echo "      export DOCKER_REGISTRY=localhost:5000"
+  echo "      or"
+  echo "      ./build.sh -r localhost:5000"
+  echo ""
+else
+  echo "INFO: Using DOCKER_REGISTRY='${DOCKER_REGISTRY}'"
+fi
+
+VER="$(cat version.txt)"
 echo "Building images with version: ${VER}"
-if [ ! -z "$DOCKER_REGISTRY" ]; then
+if [ -n "${DOCKER_REGISTRY:-}" ]; then
   echo "Registry: ${DOCKER_REGISTRY}"
 fi
 echo ""
 
 # Optional: Remove existing pgcluster volumes to start fresh
-# Uncomment the following line if you want to clean volumes before building
-# docker volume ls | grep pgcluster | awk '{print $2}' | xargs docker volume rm 2>/dev/null
+# docker volume ls | grep pgcluster | awk '{print $2}' | xargs docker volume rm 2>/dev/null || true
 
 echo "==> Building PostgreSQL image..."
 docker build -t pg:${VER} --no-cache=false -f postgres/Dockerfile ./postgres
-if [ $? -ne 0 ]; then
-  echo "ERROR: Failed to build pg:${VER}"
-  exit 1
-fi
 echo "✓ Successfully built pg:${VER}"
 
-if [ ! -z "$DOCKER_REGISTRY" ]; then
+if [ -n "${DOCKER_REGISTRY:-}" ]; then
   echo "==> Pushing pg:${VER} to registry ${DOCKER_REGISTRY}..."
-  docker tag pg:${VER} ${DOCKER_REGISTRY}/pg:${VER}
-  docker push ${DOCKER_REGISTRY}/pg:${VER}
-  if [ $? -eq 0 ]; then
-    echo "✓ Successfully pushed ${DOCKER_REGISTRY}/pg:${VER}"
-  else
-    echo "ERROR: Failed to push to registry"
-    exit 1
-  fi
+  docker tag pg:${VER} "${DOCKER_REGISTRY}/pg:${VER}"
+  docker push "${DOCKER_REGISTRY}/pg:${VER}"
+  echo "✓ Successfully pushed ${DOCKER_REGISTRY}/pg:${VER}"
 fi
 
 echo ""
 echo "==> Building Pgpool image..."
 docker build -t pgpool:${VER} -f pgpool/Dockerfile ./pgpool
-if [ $? -ne 0 ]; then
-  echo "ERROR: Failed to build pgpool:${VER}"
-  exit 1
-fi
 echo "✓ Successfully built pgpool:${VER}"
 
-if [ ! -z "$DOCKER_REGISTRY" ]; then
+if [ -n "${DOCKER_REGISTRY:-}" ]; then
   echo "==> Pushing pgpool:${VER} to registry ${DOCKER_REGISTRY}..."
-  docker tag pgpool:${VER} ${DOCKER_REGISTRY}/pgpool:${VER}
-  docker push ${DOCKER_REGISTRY}/pgpool:${VER}
-  if [ $? -eq 0 ]; then
-    echo "✓ Successfully pushed ${DOCKER_REGISTRY}/pgpool:${VER}"
-  else
-    echo "ERROR: Failed to push to registry"
-    exit 1
-  fi
+  docker tag pgpool:${VER} "${DOCKER_REGISTRY}/pgpool:${VER}"
+  docker push "${DOCKER_REGISTRY}/pgpool:${VER}"
+  echo "✓ Successfully pushed ${DOCKER_REGISTRY}/pgpool:${VER}"
 fi
 
 echo ""
 echo "==> Building Manager image..."
-thisdir=$(pwd)
+thisdir="$(pwd)"
 cd manager/build
 
 # Pass DOCKER_REGISTRY to manager build script
 export DOCKER_REGISTRY
 ./build.bash
 
-if [ $? -ne 0 ]; then
-  echo "ERROR: Failed to build manager image"
-  cd $thisdir
-  exit 1
-fi
-cd $thisdir
+cd "$thisdir"
 echo "✓ Successfully built manager:${VER}"
 
 echo ""
@@ -96,17 +108,17 @@ echo "  - pg:${VER}"
 echo "  - pgpool:${VER}"
 echo "  - manager:${VER}"
 
-if [ ! -z "$DOCKER_REGISTRY" ]; then
+if [ -n "${DOCKER_REGISTRY:-}" ]; then
   echo ""
   echo "Images pushed to registry: ${DOCKER_REGISTRY}"
   echo ""
-  echo "To verify images in registry:"
+  echo "To verify images in registry (if registry supports v2 catalog):"
   echo "  curl http://${DOCKER_REGISTRY}/v2/_catalog"
 else
   echo ""
   echo "Images built locally. To push to a registry:"
   echo "  export DOCKER_REGISTRY=localhost:5000"
-  echo "  ./build.sh"
+  echo "  ./build.sh -r localhost:5000"
 fi
 
 echo ""
