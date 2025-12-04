@@ -84,21 +84,22 @@ print_error() {
 }
 
 # Function to check if keys already exist
+# Returns 0 (success) if keys exist, 1 if no keys found
 check_existing_keys() {
-  local has_keys=0
+  local has_keys=1  # Assume no keys (return failure)
   
   if [[ -f "$POSTGRES_SSH_DIR/id_rsa" ]]; then
-    has_keys=1
+    has_keys=0  # Keys found (return success)
     print_warning "Existing SSH keys found in $POSTGRES_SSH_DIR"
   fi
   
   if [[ -f "$PGPOOL_SSH_DIR/id_rsa" ]]; then
-    has_keys=1
+    has_keys=0
     print_warning "Existing SSH keys found in $PGPOOL_SSH_DIR"
   fi
   
   if [[ -f "$MANAGER_SSH_DIR/id_rsa" ]]; then
-    has_keys=1
+    has_keys=0
     print_warning "Existing SSH keys found in $MANAGER_SSH_DIR"
   fi
   
@@ -138,9 +139,7 @@ generate_keys() {
   # - Passphrases would require manual intervention during container startup
   # - The containers run in a trusted network environment
   # - Keys should be rotated periodically and not used outside the cluster
-  ssh-keygen -t rsa -b 2048 -f "$TEMP_DIR/id_rsa" -N '' -C "pgcluster-internode-communication"
-  
-  if [[ $? -ne 0 ]]; then
+  if ! ssh-keygen -t rsa -b 2048 -f "$TEMP_DIR/id_rsa" -N '' -C "pgcluster-internode-communication"; then
     print_error "Failed to generate SSH keys"
     rm -rf "$TEMP_DIR"
     exit 1
