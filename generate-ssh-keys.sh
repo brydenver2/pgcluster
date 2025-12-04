@@ -28,10 +28,20 @@
 # For even better security with smaller key sizes, consider using Ed25519 keys
 # by modifying the ssh-keygen command to use -t ed25519 instead of -t rsa.
 #
-# IMPORTANT: The cluster uses StrictHostKeyChecking=no which bypasses SSH host
-# key verification. This is convenient for dynamic container environments but
-# creates a security vulnerability to man-in-the-middle attacks. In production
-# with fixed hostnames, enable host key checking and populate known_hosts.
+# IMPORTANT SECURITY TRADE-OFFS:
+# 1. Empty Passphrase: Keys are generated without a passphrase to enable
+#    automated container startup. In production, consider using a secrets
+#    management system (HashiCorp Vault, AWS Secrets Manager, etc.) to
+#    manage keys with passphrases.
+#
+# 2. StrictHostKeyChecking=no: The cluster bypasses SSH host key verification
+#    for convenience in dynamic container environments. This creates a 
+#    vulnerability to man-in-the-middle attacks. For production with fixed
+#    hostnames, enable host key checking and populate known_hosts file.
+#
+# 3. Keys in Repository: Generated keys are stored in the repository for
+#    development convenience. Production deployments should generate unique
+#    keys per environment and store them securely outside version control.
 #
 # Usage:
 # ------
@@ -286,7 +296,11 @@ display_summary() {
   echo "  - $MANAGER_SSH_DIR/"
   echo ""
   print_info "Public key fingerprint:"
-  ssh-keygen -lf "$POSTGRES_SSH_DIR/id_rsa.pub"
+  if ssh-keygen -lf "$POSTGRES_SSH_DIR/id_rsa.pub" 2>/dev/null; then
+    : # Fingerprint displayed successfully
+  else
+    print_warning "Could not display key fingerprint (key file may be corrupted)"
+  fi
   echo ""
   print_warning "IMPORTANT: Rebuild Docker images to use the new keys:"
   echo "  ./build.sh"
