@@ -1,0 +1,36 @@
+{
+  "recommendations": [
+    // Essential for JavaScript/Node.js development
+    "dbaeumer.vscode-eslint",
+    
+    // Docker support
+    "ms-azuretools.vscode-docker",
+    
+    // Shell script support
+    "timonwong.shellcheck",
+    "foxundermoon.shell-format",
+    
+    // YAML/Docker Compose support
+    "redhat.vscode-yaml",
+    
+    // PostgreSQL/SQL support
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-pg",
+    
+    // Git integration
+    "eamodio.gitlens",
+    
+    // React development
+    "dsznajder.es7-react-js-snippets",
+    
+    // Code formatting
+    "esbenp.prettier-vscode",
+    
+    // Markdown support
+    "yzhang.markdown-all-in-one",
+    
+    // GitHub Copilot
+    "github.copilot",
+    "github.copilot-chat"
+  ]
+}
