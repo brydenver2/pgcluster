@@ -24,6 +24,15 @@
 # private keys (id_rsa) should be kept secure. In production environments,
 # consider using unique keys per environment and rotating them periodically.
 #
+# This script generates 4096-bit RSA keys for enhanced long-term security.
+# For even better security with smaller key sizes, consider using Ed25519 keys
+# by modifying the ssh-keygen command to use -t ed25519 instead of -t rsa.
+#
+# IMPORTANT: The cluster uses StrictHostKeyChecking=no which bypasses SSH host
+# key verification. This is convenient for dynamic container environments but
+# creates a security vulnerability to man-in-the-middle attacks. In production
+# with fixed hostnames, enable host key checking and populate known_hosts.
+#
 # Usage:
 # ------
 #   ./generate-ssh-keys.sh [--force]
@@ -33,14 +42,14 @@
 #
 # What this script does:
 # ----------------------
-# 1. Generates a new RSA key pair (2048-bit)
+# 1. Generates a new RSA key pair (4096-bit for enhanced security)
 # 2. Copies the keys to all required directories:
 #    - postgres/ssh_keys/     (PostgreSQL nodes)
 #    - pgpool/ssh_keys/       (Pgpool nodes)
 #    - manager/build/ssh_keys/ (Manager container)
 # 3. Creates authorized_keys file with the public key
-# 4. Creates known_hosts file for common PostgreSQL hostnames
-# 5. Sets appropriate file permissions
+# 4. Creates known_hosts file (with security warnings about StrictHostKeyChecking=no)
+# 5. Sets appropriate file permissions (600 for private keys and authorized_keys)
 #
 # After running this script:
 # --------------------------
@@ -133,13 +142,15 @@ generate_keys() {
   print_info "Creating temporary directory: $TEMP_DIR"
   mkdir -p "$TEMP_DIR"
   
-  print_info "Generating new RSA SSH key pair (2048-bit)..."
+  print_info "Generating new RSA SSH key pair (4096-bit)..."
   # Note: Using empty passphrase (-N '') for containerized environments where:
   # - Keys are used for automated inter-node communication
   # - Passphrases would require manual intervention during container startup
   # - The containers run in a trusted network environment
   # - Keys should be rotated periodically and not used outside the cluster
-  if ! ssh-keygen -t rsa -b 2048 -f "$TEMP_DIR/id_rsa" -N '' -C "pgcluster-internode-communication"; then
+  # Using 4096-bit RSA for better long-term security
+  # Alternative: Consider Ed25519 (ssh-keygen -t ed25519) for better security with smaller keys
+  if ! ssh-keygen -t rsa -b 4096 -f "$TEMP_DIR/id_rsa" -N '' -C "pgcluster-internode-communication"; then
     print_error "Failed to generate SSH keys"
     rm -rf "$TEMP_DIR"
     exit 1
@@ -159,16 +170,33 @@ create_known_hosts() {
   print_info "Creating known_hosts file with common PostgreSQL hostnames..."
   
   # Create an empty known_hosts file
-  # In production, this would be populated with actual host keys
-  # For now, we create an empty file since we use StrictHostKeyChecking=no
+  # SECURITY NOTE: This cluster uses StrictHostKeyChecking=no in SSH configuration
+  # to allow dynamic container hostnames. This creates a potential security vulnerability
+  # by making the system susceptible to man-in-the-middle (MITM) attacks.
+  # 
+  # In production environments with fixed hostnames, you should:
+  # 1. Disable StrictHostKeyChecking=no in the SSH configuration
+  # 2. Populate this file with actual host keys for each node
+  # 3. Use SSH host key verification to prevent MITM attacks
+  # 
+  # To populate with real host keys, run on each node after deployment:
+  #   ssh-keyscan -p 222 -H <hostname> >> known_hosts
+  #
   cat > "$TEMP_DIR/known_hosts" <<'EOF'
 # PostgreSQL Cluster Known Hosts
 # 
-# Note: This cluster uses StrictHostKeyChecking=no in SSH configuration
-# to allow dynamic container hostnames. In production environments,
-# consider populating this file with actual host keys for better security.
+# SECURITY WARNING: This cluster uses StrictHostKeyChecking=no which bypasses
+# SSH host key verification. This makes the cluster vulnerable to man-in-the-middle attacks.
+# 
+# For production deployments with static hostnames, populate this file with actual
+# host keys and enable StrictHostKeyChecking in SSH configuration.
 #
 # Format: hostname ssh-rsa AAAAB3NzaC1yc2E...
+#
+# Example commands to populate (run after cluster deployment):
+#   ssh-keyscan -p 222 -H pg01 >> known_hosts
+#   ssh-keyscan -p 222 -H pg02 >> known_hosts
+#   ssh-keyscan -p 222 -H pg03 >> known_hosts
 EOF
 }
 
