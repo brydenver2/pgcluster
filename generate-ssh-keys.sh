@@ -133,6 +133,11 @@ generate_keys() {
   mkdir -p "$TEMP_DIR"
   
   print_info "Generating new RSA SSH key pair (2048-bit)..."
+  # Note: Using empty passphrase (-N '') for containerized environments where:
+  # - Keys are used for automated inter-node communication
+  # - Passphrases would require manual intervention during container startup
+  # - The containers run in a trusted network environment
+  # - Keys should be rotated periodically and not used outside the cluster
   ssh-keygen -t rsa -b 2048 -f "$TEMP_DIR/id_rsa" -N '' -C "pgcluster-internode-communication"
   
   if [[ $? -ne 0 ]]; then
@@ -213,9 +218,9 @@ set_permissions() {
   chmod 644 "$PGPOOL_SSH_DIR/id_rsa.pub"
   chmod 644 "$MANAGER_SSH_DIR/id_rsa.pub"
   
-  # authorized_keys should be 644
-  chmod 644 "$POSTGRES_SSH_DIR/authorized_keys"
-  chmod 644 "$PGPOOL_SSH_DIR/authorized_keys"
+  # authorized_keys should be read-only for owner (600) for security
+  chmod 600 "$POSTGRES_SSH_DIR/authorized_keys"
+  chmod 600 "$PGPOOL_SSH_DIR/authorized_keys"
   
   # known_hosts should be 644
   chmod 644 "$POSTGRES_SSH_DIR/known_hosts"

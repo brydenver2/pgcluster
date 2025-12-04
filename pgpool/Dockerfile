@@ -28,7 +28,7 @@ RUN echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
 ADD ssh_keys /home/postgres/.ssh 
 RUN mkdir -p /var/run/pgpool && \
     chown -R postgres:postgres /home/postgres/.ssh && chmod 700 /home/postgres/.ssh && \
-    chmod 644 /home/postgres/.ssh/* && chmod 600 /home/postgres/.ssh/id_rsa && \
+    chmod 644 /home/postgres/.ssh/* && chmod 600 /home/postgres/.ssh/id_rsa && chmod 600 /home/postgres/.ssh/authorized_keys && \
     chown postgres:postgres /var/run/pgpool
 ADD pool_hba.conf /etc/pgpool-II/
 # pcp user is postgres and password is postgres (hard-coded)

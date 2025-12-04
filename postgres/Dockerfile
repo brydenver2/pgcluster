@@ -57,7 +57,7 @@ RUN echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
 # ssh listen on port 222
 RUN sed -i -e "s/^#Port 22/Port 222/" /etc/ssh/sshd_config
 ADD ssh_keys /home/postgres/.ssh 
-RUN chown -R postgres:postgres /home/postgres/.ssh && chmod 700 /home/postgres/.ssh && chmod 644 /home/postgres/.ssh/* && chmod 600 /home/postgres/.ssh/id_rsa
+RUN chown -R postgres:postgres /home/postgres/.ssh && chmod 700 /home/postgres/.ssh && chmod 644 /home/postgres/.ssh/* && chmod 600 /home/postgres/.ssh/id_rsa && chmod 600 /home/postgres/.ssh/authorized_keys
 RUN rm -f /run/nologin
 ENV PATH=$PATH:/usr/lib/postgresql/${MAJORVER}/bin
 ADD initdb.sh /scripts/initdb.sh
