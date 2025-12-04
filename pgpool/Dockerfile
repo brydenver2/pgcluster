@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y passwd sudo ca-certificates gnupg lsb-release curl && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-RUN groupadd -g 50010 postgres && useradd -u 50010 -g postgres postgres 
+RUN groupadd -g 50010 postgres && useradd -u 50010 -g postgres -m postgres 
 RUN usermod -aG sudo postgres && echo "postgres:postgres" | chpasswd
 # Install PostgreSQL repository
 RUN install -d /usr/share/postgresql-common/pgdg && \
