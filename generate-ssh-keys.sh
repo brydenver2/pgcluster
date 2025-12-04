@@ -223,10 +223,12 @@ copy_keys_to_directories() {
   cp "$TEMP_DIR/authorized_keys" "$PGPOOL_SSH_DIR/"
   cp "$TEMP_DIR/known_hosts" "$PGPOOL_SSH_DIR/"
   
-  # Copy to manager directory
+  # Copy to manager directory (all files for consistency)
   print_info "  -> $MANAGER_SSH_DIR/"
   cp "$TEMP_DIR/id_rsa" "$MANAGER_SSH_DIR/"
   cp "$TEMP_DIR/id_rsa.pub" "$MANAGER_SSH_DIR/"
+  cp "$TEMP_DIR/authorized_keys" "$MANAGER_SSH_DIR/"
+  cp "$TEMP_DIR/known_hosts" "$MANAGER_SSH_DIR/"
   
   print_info "SSH keys copied successfully"
 }
@@ -248,10 +250,12 @@ set_permissions() {
   # authorized_keys should be read-only for owner (600) for security
   chmod 600 "$POSTGRES_SSH_DIR/authorized_keys"
   chmod 600 "$PGPOOL_SSH_DIR/authorized_keys"
+  chmod 600 "$MANAGER_SSH_DIR/authorized_keys"
   
   # known_hosts should be 644
   chmod 644 "$POSTGRES_SSH_DIR/known_hosts"
   chmod 644 "$PGPOOL_SSH_DIR/known_hosts"
+  chmod 644 "$MANAGER_SSH_DIR/known_hosts"
   
   # Directories should be 755
   chmod 755 "$POSTGRES_SSH_DIR"
