@@ -95,24 +95,24 @@ print_error() {
 # Function to check if keys already exist
 # Returns 0 (success) if keys exist, 1 if no keys found
 check_existing_keys() {
-  local has_keys=1  # Assume no keys (return failure)
+  local keys_exist=1  # Assume no keys exist (will return 1 = failure)
   
   if [[ -f "$POSTGRES_SSH_DIR/id_rsa" ]]; then
-    has_keys=0  # Keys found (return success)
+    keys_exist=0  # Keys found (will return 0 = success)
     print_warning "Existing SSH keys found in $POSTGRES_SSH_DIR"
   fi
   
   if [[ -f "$PGPOOL_SSH_DIR/id_rsa" ]]; then
-    has_keys=0
+    keys_exist=0
     print_warning "Existing SSH keys found in $PGPOOL_SSH_DIR"
   fi
   
   if [[ -f "$MANAGER_SSH_DIR/id_rsa" ]]; then
-    has_keys=0
+    keys_exist=0
     print_warning "Existing SSH keys found in $MANAGER_SSH_DIR"
   fi
   
-  return $has_keys
+  return $keys_exist
 }
 
 # Function to backup existing keys
