@@ -4,6 +4,14 @@
 
 **Base OS: Debian 12 (Bookworm)** (upgraded from CentOS 8 which is EOL)
 
+## Quick Start
+
+⚡ **New to this project?** Start here:
+- **[QUICKSTART.md](QUICKSTART.md)** - Get up and running in minutes
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete deployment guide (Docker CLI, Swarm, Portainer)
+
+## Overview
+
 > **Note on Data Directories:** The examples in this README use `/u01/pg17/data` for the data directory path. If you're upgrading from an older version and want to keep your existing data, keep using your current path (e.g., `/u01/pg10/data`). The path is configurable via the `PG_BACKEND_NODE_LIST` environment variable and volume mount paths in the docker-compose files.
 
 Postgres streaming replication with pgpool and/or repmgr for the automated failover. The images can be used in docker swarm cluster or via docker run outside the swarm. When running the images in a docker swarm, the HA of pgpool can be either via the traditional pgpool watchdog mode (with a VIP) or via the swarm (but I found too many edge cases in this case). When the docker images are used outside docker swarm then pgpool is made HA via the traditional watchdog mode (with a VIP).

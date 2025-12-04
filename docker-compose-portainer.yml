@@ -1,0 +1,134 @@
+version: '3.2'
+
+# Docker Compose file for Portainer deployment
+# This file uses images from a registry (local or remote)
+# 
+# Before using this file:
+# 1. Set up a registry (see DEPLOYMENT.md)
+# 2. Build and push images:
+#    export DOCKER_REGISTRY=localhost:5000
+#    ./build.sh
+# 3. Update the image references below if using a different registry
+#
+# To deploy in Portainer:
+# 1. Upload this file or paste its contents
+# 2. Set environment variables in Portainer (or use defaults below)
+# 3. Deploy the stack
+
+services:
+  pg01:
+    image: ${DOCKER_REGISTRY:-localhost:5000}/pg:${pg_version:-1.0.1}
+    environment:
+      INITIAL_NODE_TYPE: master
+      NODE_ID: 1
+      NODE_NAME: pg01
+      MSLIST: "myservice" 
+              # for each micro-service two db users are created, for ex. myservice_owner and myservice_user, etc.
+      MSOWNERPWDLIST: "myservice_owner"
+      MSUSERPWDLIST: "myservice_user"
+      REPMGRPWD: rep123
+      REPMGRD_FAILOVER_MODE: manual
+      PGMASTER: pg01
+    ports:
+      - 15432:5432 # postgres port
+    volumes:
+      - pg01db:/data
+      - pg01arc:/archive
+    networks:
+      - pgcluster_network
+
+  pg02:
+    image: ${DOCKER_REGISTRY:-localhost:5000}/pg:${pg_version:-1.0.1}
+    environment:
+      INITIAL_NODE_TYPE: slave
+      NODE_ID: 2
+      NODE_NAME: pg02
+      MSLIST: "myservice"
+      MSOWNERPWDLIST: "myservice_owner"
+      MSUSERPWDLIST: "myservice_user"
+      REPMGRPWD: rep123
+      REPMGRD_FAILOVER_MODE: manual
+      PGMASTER: pg01
+    ports:
+      - 25432:5432 # postgres port
+    volumes:
+      - pg02db:/data
+      - pg02arc:/archive
+    networks:
+      - pgcluster_network
+    depends_on:
+      - pg01
+
+  pg03:
+    image: ${DOCKER_REGISTRY:-localhost:5000}/pg:${pg_version:-1.0.1}
+    environment:
+      INITIAL_NODE_TYPE: slave
+      NODE_ID: 3
+      NODE_NAME: pg03
+      MSLIST: "myservice"
+      MSOWNERPWDLIST: "myservice_owner"
+      MSUSERPWDLIST: "myservice_user"
+      REPMGRPWD: rep123
+      REPMGRD_FAILOVER_MODE: manual
+      PGMASTER: pg01
+    ports:
+      - 35432:5432 # postgres port
+    volumes:
+      - pg03db:/data
+      - pg03arc:/archive
+    networks:
+      - pgcluster_network
+    depends_on:
+      - pg01
+
+  pgpool:
+    image: ${DOCKER_REGISTRY:-localhost:5000}/pgpool:${pg_version:-1.0.1}
+    ports:
+      - 9999:9999
+    environment:
+      PGMASTER_NODE_NAME: pg01
+      PG_BACKEND_NODE_LIST: 0:pg01:5432:1:/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/data:ALLOW_TO_FAILOVER,2:pg03:5432:1:/data:ALLOW_TO_FAILOVER
+                # csv list of backend postgres databases, each backend db contains (separated by :)
+                # number (start with 0):host name:pgpool port (default 9999):data dir (default /data):flag ALLOW_TO_FAILOVER or DISALLOW_TO_FAILOVER
+                # not needed when there is a single postgres DB
+      PGP_NODE_NAME: pgpool
+      REPMGRPWD: rep123
+      FAILOVER_MODE: automatic
+      PGPOOL_HEALTH_CHECK_MAX_RETRIES: 3
+      PGPOOL_HEALTH_CHECK_RETRY_DELAY: 1
+      PGPOOL_FAIL_OVER_ON_BACKEND_ERROR: "off"
+      PGPOOL_HEALTH_CHECK_PERIOD: 5
+      PGPOOL_NUM_INIT_CHILDREN: 50
+      PGPOOL_LOAD_BALANCE_MODE: "no"
+      PGPOOL_LOG_CONNECTIONS: "off"
+    networks:
+      - pgcluster_network
+    depends_on:
+      - pg01
+      - pg02
+      - pg03
+
+  manager:
+    image: ${DOCKER_REGISTRY:-localhost:5000}/manager:${pg_version:-1.0.1}
+    ports:
+      - 8080:8080
+    environment:
+      PG_BACKEND_NODE_LIST: 0:pg01:5432:1:/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/data:ALLOW_TO_FAILOVER,2:pg03:5432:1:/data:ALLOW_TO_FAILOVER
+      REPMGRPWD: rep123
+      DBHOST: pgpool
+    networks:
+      - pgcluster_network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  pg01db:
+  pg02db:
+  pg03db:
+  pg01arc:
+  pg02arc:
+  pg03arc:
+
+networks:
+  pgcluster_network:
+    driver: bridge
