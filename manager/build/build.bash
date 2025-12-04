@@ -36,4 +36,3 @@ if [ ! -z "$DOCKER_REGISTRY" ]; then
 fi
 
 rm -rf server client 2>/dev/null
-exit 0
