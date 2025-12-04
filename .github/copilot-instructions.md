@@ -305,7 +305,9 @@ npm run lint
 - **Streaming Replication**: Asynchronous by default
 - **Replication Slots**: Used for WAL management
 - **repmgr**: Manages replication topology and metadata
-- **Automatic Failover**: Can be handled by pgpool OR repmgr (pgpool recommended for better integration with connection pooling and more stable failover behavior)
+- **Automatic Failover**: Can be handled by pgpool OR repmgr
+  - Pgpool is recommended for better integration with connection pooling
+  - Provides more stable failover behavior in production environments
 
 ### Pgpool Configuration
 - **Backend Node List**: Defines all PostgreSQL nodes
