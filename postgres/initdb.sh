@@ -260,6 +260,44 @@ EOF
   fi
 else
   log_info "File ${PGDATA}/postgresql.conf already exist"
+  # Ensure repmgr extension is installed even on restart
+  log_info "Checking if repmgr database and extension need to be set up"
+  # Start postgres temporarily to check/install extension
+  pg_ctl -D ${PGDATA} start -o "-c 'listen_addresses=localhost'" -w
+  
+  # Check if repmgr user exists, create if not
+  psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='repmgr'" | grep -q 1
+  if [ $? -ne 0 ] ; then
+    log_info "Creating repmgr user"
+    psql <<-EOF
+     create user repmgr with superuser login password '${REPMGRPWD}' ;
+     alter user repmgr set search_path to repmgr,"\$user",public;
+     \q
+EOF
+  else
+    log_info "repmgr user already exists"
+  fi
+  
+  # Check if repmgr database exists, create if not
+  psql -lqt | cut -d \| -f 1 | grep -qw repmgr
+  if [ $? -ne 0 ] ; then
+    log_info "Creating repmgr database"
+    psql --command "create database repmgr with owner=repmgr ENCODING='UTF8' LC_COLLATE='en_US.UTF8';"
+  else
+    log_info "repmgr database already exists"
+  fi
+  
+  # Check if repmgr extension exists, create if not
+  psql -d repmgr -tAc "SELECT 1 FROM pg_extension WHERE extname='repmgr'" | grep -q 1
+  if [ $? -ne 0 ] ; then
+    log_info "Installing repmgr extension in repmgr database"
+    psql -d repmgr -c "CREATE EXTENSION IF NOT EXISTS repmgr;"
+  else
+    log_info "repmgr extension already installed"
+  fi
+  
+  # Stop postgres before starting in foreground
+  pg_ctl stop -w
 fi
 #TODO: this trap is not used
 trap shutdown HUP INT QUIT ABRT KILL ALRM TERM TSTP
