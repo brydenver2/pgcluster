@@ -15,7 +15,7 @@ RUN install -d /usr/share/postgresql-common/pgdg && \
     sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 RUN apt-get update && apt-get install -y \
     postgresql-client-${PGVER} postgresql-${PGVER}-pgpool2 pgpool2 \
-    sudo vi openssh-client openssh-server iproute2 && \
+    sudo openssh-client openssh-server iproute2 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 # postgres can do sudo
 RUN echo "Defaults:postgres !requiretty" > /etc/sudoers.d/postgres && \
