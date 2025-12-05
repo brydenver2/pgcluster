@@ -223,6 +223,8 @@ EOF
     log_info "set password for postgres"
     psql --command "alter user postgres with login password '${REPMGRPWD}';"
     psql --command "create database repmgr with owner=repmgr ENCODING='UTF8' LC_COLLATE='en_US.UTF8';"
+    log_info "Installing repmgr extension in repmgr database"
+    psql -d repmgr -c "CREATE EXTENSION IF NOT EXISTS repmgr;"
     if [ -f /usr/share/postgresql/${PGVER}/extension/pgpool-recovery.sql ] ; then
       log_info "pgpool extensions"
       psql -c "create extension pgpool_recovery;" -d template1
