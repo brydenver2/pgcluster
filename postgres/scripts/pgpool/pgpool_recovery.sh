@@ -10,7 +10,7 @@
 # Be sure to set up public SSH keys and authorized_keys files.
 # this script must be in PGDATA
 PGVER=${PGVER:-12}
-PATH=$PATH:/usr/pgsql-${PGVER}/bin
+PATH=$PATH:/usr/lib/postgresql/${PGVER}/bin
 ARCHIVE_DIR=/archive
 
 if [ ! -d /var/log/pg ] ; then
@@ -49,13 +49,13 @@ sleep 20
 echo "delete database and archive directories on ${replica_host}"
 $ssh_copy "rm -Rf $replica_path/* ${ARCHIVE_DIR}/*"
 echo let us use repmgr on the replica host to force it to sync again
-$ssh_copy "/usr/pgsql-${PGVER}/bin/repmgr -h ${primary_host} --username=repmgr -d repmgr -f /etc/repmgr/${PGVER}/repmgr.conf standby clone -v"
+$ssh_copy "/usr/lib/postgresql/${PGVER}/bin/repmgr -h ${primary_host} --username=repmgr -d repmgr -f /etc/repmgr/${PGVER}/repmgr.conf standby clone -v"
 echo "Start database on ${replica_host} "
 # -s -l /dev/null is needed otherwise ssh hangs
 $ssh_copy "/scripts/pg_start.sh"
 echo sleeping 20
 sleep 20
 echo "Register standby database"
-$ssh_copy "/usr/pgsql-${PGVER}/bin/repmgr -f /etc/repmgr/${PGVER}/repmgr.conf standby register -F -v"
+$ssh_copy "/usr/lib/postgresql/${PGVER}/bin/repmgr -f /etc/repmgr/${PGVER}/repmgr.conf standby register -F -v"
 $ssh_copy "sudo supervisor status all"
 ) 2>&1 | tee -a ${LOGFILE}
