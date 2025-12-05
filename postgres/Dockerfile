@@ -66,5 +66,5 @@ EXPOSE 222
 VOLUME ["/data","/archive","/backup"]
 # if the file $PGDATA/postgres.conf does not exist initdb will initialize the cluster and create db phoenix
 #  and db users (two per microservice)
-CMD ["/usr/local/bin/supervisord","--configuration=/etc/supervisor/supervisord.conf"]
+CMD ["/usr/bin/supervisord","--configuration=/etc/supervisor/supervisord.conf"]
 #CMD ["tail","-f","/etc/supervisor/supervisord.conf"]
