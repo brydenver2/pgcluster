@@ -1,7 +1,7 @@
 FROM debian:12 as builder
 MAINTAINER p.timmermans@evs.com
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get upgrade -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y && apt-get install -y xz-utils && apt-get clean && rm -rf /var/lib/apt/lists/*
 ADD https://nodejs.org/dist/v12.16.2/node-v12.16.2-linux-x64.tar.xz ./
 RUN tar xvf /node-v12.16.2-linux-x64.tar.xz && rm /node-v12.16.2-linux-x64.tar.xz 
 ENV PATH $PATH:/node-v12.16.2-linux-x64/bin
