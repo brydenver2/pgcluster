@@ -54,7 +54,7 @@ check_ssh_connectivity() {
     
     echo "ERROR: Failed to establish SSH connection to $host after $max_retries attempts"
     return 1
-fi
+}
 
 # Function to execute SSH command with error handling
 ssh_exec() {
@@ -78,7 +78,7 @@ ssh_exec() {
     
     echo "ERROR: SSH command failed after $max_retries attempts: $cmd"
     return 1
-fi
+}
 
 #primary_host=$(hostname -i)
 primary_host=$NODE_NAME
