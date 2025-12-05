@@ -15,7 +15,7 @@ RUN install -d /usr/share/postgresql-common/pgdg && \
     sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 RUN apt-get update && apt-get install -y \
     postgresql-client-${PGVER} postgresql-${PGVER}-pgpool2 pgpool2 \
-    sudo openssh-client openssh-server iproute2 && \
+    sudo openssh-client openssh-server iproute2 iputils-arping && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 # postgres can do sudo
 RUN echo "Defaults:postgres !requiretty" > /etc/sudoers.d/postgres && \
@@ -38,7 +38,7 @@ RUN echo "*:*:postgres:postgres" > /home/postgres/.pcppass && \
   chown postgres:postgres /home/postgres/.pcppass && \
   chmod 600 /home/postgres/.pcppass && \
   chown -R postgres:postgres /etc/pgpool-II && \
-  chmod +s /usr/sbin/arping /usr/sbin/ip
+  chmod +s /usr/bin/arping /usr/sbin/ip
 # put a file on /tmp so that we can determine if /tmp is host mounted or not (for pgpool_status file)
 RUN touch /tmp/.not_host_mounted
 ADD scripts /scripts
