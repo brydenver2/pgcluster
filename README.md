@@ -60,7 +60,7 @@ There are two different ways to use those docker images:
 
 (A third way that I abandonned; a docker swarm with one pgpool instance running (no watchdog) and it is made high available via swarm. When pgpool starts it rebuilds the node availability (file `/tmp/pgpool_status`) by looking at repmgr's nodes table. This is not very well tested and I fount it too difficult.)
 
-In both case some ansible scripts are available to automate the deployment on two or three virtual machines (centos 7). The automatic failover is optional. It can either be done by pgpool or by repmgr (**abandoned** for me see [repmgr failover](doc/repmgr_auto.md)).
+In both cases, ansible scripts are available to automate the deployment on two or three virtual machines (Debian 12 or other Linux distributions). The automatic failover is optional. It can either be done by pgpool or by repmgr (**abandoned** for me see [repmgr failover](doc/repmgr_auto.md)).
 
 The rest of this README is for the docker swarm scenario, there is another README for the non docker swarm mode.
 

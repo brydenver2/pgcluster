@@ -41,7 +41,7 @@ else
     echo "Node $HOSTNAME is not in recovery, probably a degenerated master, skip it" | tee -a $LOGFILE
     exit 0
   fi
-  $ssh_options postgres@${HOSTNAME} "/usr/pgsql-${PGVER}/bin/repmgr --log-to-file -f /etc/repmgr/${PGVER}/repmgr.conf -h ${NEW_MASTER_HOST} -U repmgr -d repmgr standby follow -v"
+  $ssh_options postgres@${HOSTNAME} "/usr/lib/postgresql/${PGVER}/bin/repmgr --log-to-file -f /etc/repmgr/${PGVER}/repmgr.conf -h ${NEW_MASTER_HOST} -U repmgr -d repmgr standby follow -v"
   echo "Sleep 10"
   sleep 10
   echo "Attach node ${NODEID}"
