@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-pgpool2 pgpool2 
 # Install repmgr
 RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-repmgr && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /var/log/repmgr && chown postgres:postgres /var/log/repmgr
+RUN mkdir -p /etc/repmgr/${PGVER} && chown postgres:postgres /etc/repmgr/${PGVER}
 RUN mkdir -p /data /backup /archive && chown -R postgres:postgres /data /backup /archive && chmod 755 /data /archive
 ENV PGDATA /data
 ENV PATH=$PATH:/usr/lib/postgresql/${MAJORVER}/bin

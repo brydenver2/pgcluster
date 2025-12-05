@@ -406,8 +406,8 @@ curl -X POST "${PORTAINER_URL}/api/stacks" \
 ```
 
 **Note:** You'll need `jq` installed for the above command to work. Install it with:
-- Ubuntu/Debian: `sudo apt install jq`
-- RHEL/CentOS/Fedora: `sudo dnf install jq` (or `sudo yum install jq` on CentOS 7)
+- Debian/Ubuntu: `sudo apt install jq`
+- RHEL/CentOS/Fedora: `sudo dnf install jq` (or `sudo yum install jq` on older versions)
 - macOS: `brew install jq`
 
 ---

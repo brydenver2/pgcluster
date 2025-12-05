@@ -102,7 +102,7 @@ log_info "MSUSERPWDLIST: ${MSUSERPWDLIST}"
 log_info "PGDATA: ${PGDATA}" 
 INITIAL_NODE_TYPE=${INITIAL_NODE_TYPE:-single} 
 log_info "INITIAL_NODE_TYPE: ${INITIAL_NODE_TYPE}" 
-export PATH=$PATH:/usr/pgsql-${PGVER}/bin
+export PATH=$PATH:/usr/lib/postgresql/${PGVER}/bin
 MSLIST=${MSLIST-"keycloak,apiman,asset,ingest,playout"}
 NODE_ID=${NODE_ID:-1}
 NODE_NAME=${NODE_NAME:-"pg0${NODE_ID}"}
@@ -173,7 +173,7 @@ reconnect_interval=${REPMGRD_INTERVAL:-5}
 event_notification_command='/scripts/repmgrd_event.sh %n "%e" %s "%t" "%d" %p %c %a'
 monitor_interval_secs=5
 
-pg_bindir='/usr/pgsql-${PGVER}/bin'
+pg_bindir='/usr/lib/postgresql/${PGVER}/bin'
 
 service_start_command = 'sudo /usr/local/bin/supervisorctl start postgres'
 service_stop_command = 'sudo /usr/local/bin/supervisorctl stop postgres'
@@ -223,7 +223,7 @@ EOF
     log_info "set password for postgres"
     psql --command "alter user postgres with login password '${REPMGRPWD}';"
     psql --command "create database repmgr with owner=repmgr ENCODING='UTF8' LC_COLLATE='en_US.UTF8';"
-    if [ -f /usr/pgsql-${PGVER}/share/extension/pgpool-recovery.sql ] ; then
+    if [ -f /usr/share/postgresql/${PGVER}/extension/pgpool-recovery.sql ] ; then
       log_info "pgpool extensions"
       psql -c "create extension pgpool_recovery;" -d template1
       psql -c "create extension pgpool_adm;"
