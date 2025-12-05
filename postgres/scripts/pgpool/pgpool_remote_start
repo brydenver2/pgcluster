@@ -32,10 +32,55 @@ remote_path=$2
 echo "remote_host: ${remote_host}" | tee -a $LOGFILE
 echo "remote_path: ${remote_path}" | tee -a $LOGFILE
 
-ssh_options="ssh -p 222 -n -T -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no postgres@$remote_host"
+# Function to check if host is reachable via SSH
+check_ssh_connectivity() {
+    local host=$1
+    local max_retries=3
+    local retry_delay=2
+    local attempt=1
+    
+    while [ $attempt -le $max_retries ]; do
+        echo "Checking SSH connectivity to $host (attempt $attempt/$max_retries)" | tee -a $LOGFILE
+        if ssh -p 222 -n -T -o ConnectTimeout=5 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no postgres@$host "echo 'SSH connection successful'" >> $LOGFILE 2>&1; then
+            echo "SSH connection to $host successful" | tee -a $LOGFILE
+            return 0
+        fi
+        echo "SSH connection to $host failed (attempt $attempt/$max_retries)" | tee -a $LOGFILE
+        if [ $attempt -lt $max_retries ]; then
+            sleep $retry_delay
+        fi
+        attempt=$((attempt + 1))
+    done
+    
+    echo "ERROR: Failed to establish SSH connection to $host after $max_retries attempts" | tee -a $LOGFILE
+    return 1
+}
+
+# Check SSH connectivity before proceeding
+if ! check_ssh_connectivity "$remote_host"; then
+    echo "Cannot establish SSH connection to $remote_host, aborting remote start" | tee -a $LOGFILE
+    exit 1
+fi
+
+ssh_options="ssh -p 222 -n -T -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no postgres@$remote_host"
 set -x
-$ssh_options "/scripts/pg_start.sh" &
-echo "sleep 20 after pg_ctl start"
+
+# Start PostgreSQL on remote host and capture PID
+$ssh_options "/scripts/pg_start.sh" >> $LOGFILE 2>&1
+start_result=$?
+if [ $start_result -ne 0 ]; then
+    echo "WARNING: pg_start.sh returned exit code $start_result" | tee -a $LOGFILE
+fi
+
+echo "sleep 20 after pg_ctl start" | tee -a $LOGFILE
 sleep 20
-$ssh_options "supervisorctl status all"
+
+# Check supervisor status
+$ssh_options "supervisorctl status all" >> $LOGFILE 2>&1
+status_result=$?
+if [ $status_result -ne 0 ]; then
+    echo "WARNING: supervisorctl status check returned exit code $status_result" | tee -a $LOGFILE
+fi
+
+echo "pgpool_remote_start completed at `date`" | tee -a $LOGFILE
 exit 0
