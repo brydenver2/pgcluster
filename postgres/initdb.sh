@@ -302,13 +302,19 @@ EOF
   if [ "$NODE_REGISTERED" = "0" ] ; then
     log_info "Node not registered, registering now"
     # Determine if this is a primary or standby by checking recovery status
-    IS_IN_RECOVERY=$(psql -tAc "SELECT pg_is_in_recovery()")
+    IS_IN_RECOVERY=$(psql -d repmgr -U repmgr -tAc "SELECT pg_is_in_recovery()")
     if [ "$IS_IN_RECOVERY" = "f" ] ; then
       log_info "This node is a primary, registering as master"
       repmgr -f /etc/repmgr/${PGVER}/repmgr.conf -v primary register --force
+      if [ $? -ne 0 ] ; then
+        log_info "WARNING: Failed to register node as primary"
+      fi
     else
       log_info "This node is a standby, registering as standby"
       repmgr -f /etc/repmgr/${PGVER}/repmgr.conf -v standby register --force
+      if [ $? -ne 0 ] ; then
+        log_info "WARNING: Failed to register node as standby"
+      fi
     fi
   else
     log_info "Node already registered in repmgr metadata"
