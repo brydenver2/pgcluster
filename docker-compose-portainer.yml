@@ -1,44 +1,81 @@
-version: '3.2'
+version: '3.8'
 
-# Docker Compose file for Portainer deployment
-# This file uses images from a registry (local or remote)
-# 
-# Before using this file:
-# 1. Set up a registry (see DEPLOYMENT.md)
-# 2. Build and push images:
-#    export DOCKER_REGISTRY=localhost:5000
-#    ./build.sh
-# 3. Update the image references below if using a different registry
-#
-# To deploy in Portainer:
-# 1. Upload this file or paste its contents
-# 2. Set environment variables in Portainer (or use defaults below)
-# 3. Deploy the stack
+volumes:
+  pg01db:
+    driver: local
+  pg02db:
+    driver: local
+  pg03db:
+    driver: local
+  pg01arc:
+    driver: local
+  pg02arc:
+    driver: local
+  pg03arc:
+    driver: local
+
+networks:
+  pgcluster_network:
+    driver: overlay
+    attachable: true
+    driver_opts:
+      encrypted: "true"
+    labels:
+      - "com.wallacearizona.network=pgcluster"
 
 services:
   pg01:
-    image: ${DOCKER_REGISTRY:-localhost:5000}/pg:${pg_version:-1.0.1}
+    image: registry.local.wallacearizona.us/pg:1.0.1
+    hostname: pg01
     environment:
       INITIAL_NODE_TYPE: master
       NODE_ID: 1
       NODE_NAME: pg01
       MSLIST: "myservice"
-      # for each micro-service two db users are created, for ex. myservice_owner and myservice_user, etc.
       MSOWNERPWDLIST: "myservice_owner"
       MSUSERPWDLIST: "myservice_user"
       REPMGRPWD: rep123
       REPMGRD_FAILOVER_MODE: manual
       PGMASTER: pg01
     ports:
-      - 15432:5432 # postgres port
+      - target: 5432
+        published: 15432
+        mode: host
     volumes:
       - pg01db:/data
       - pg01arc:/archive
     networks:
       - pgcluster_network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.postgres.node == pg01
+        max_replicas_per_node: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 30s
+        failure_action: rollback
+        order: stop-first
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+      labels:
+        - "com.wallacearizona.service=postgres-master"
+        - "com.wallacearizona.cluster=pgcluster"
 
   pg02:
-    image: ${DOCKER_REGISTRY:-localhost:5000}/pg:${pg_version:-1.0.1}
+    image: registry.local.wallacearizona.us/pg:1.0.1
+    hostname: pg02
     environment:
       INITIAL_NODE_TYPE: slave
       NODE_ID: 2
@@ -50,17 +87,44 @@ services:
       REPMGRD_FAILOVER_MODE: manual
       PGMASTER: pg01
     ports:
-      - 25432:5432 # postgres port
+      - target: 5432
+        published: 25432
+        mode: host
     volumes:
       - pg02db:/data
       - pg02arc:/archive
     networks:
       - pgcluster_network
-    depends_on:
-      - pg01
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.postgres.node == pg02
+        max_replicas_per_node: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 30s
+        failure_action: rollback
+        order: stop-first
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+      labels:
+        - "com.wallacearizona.service=postgres-slave"
+        - "com.wallacearizona.cluster=pgcluster"
 
   pg03:
-    image: ${DOCKER_REGISTRY:-localhost:5000}/pg:${pg_version:-1.0.1}
+    image: registry.local.wallacearizona.us/pg:1.0.1
+    hostname: pg03
     environment:
       INITIAL_NODE_TYPE: slave
       NODE_ID: 3
@@ -72,25 +136,51 @@ services:
       REPMGRD_FAILOVER_MODE: manual
       PGMASTER: pg01
     ports:
-      - 35432:5432 # postgres port
+      - target: 5432
+        published: 35432
+        mode: host
     volumes:
       - pg03db:/data
       - pg03arc:/archive
     networks:
       - pgcluster_network
-    depends_on:
-      - pg01
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.postgres.node == pg03
+        max_replicas_per_node: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 30s
+        failure_action: rollback
+        order: stop-first
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+      labels:
+        - "com.wallacearizona.service=postgres-slave"
+        - "com.wallacearizona.cluster=pgcluster"
 
   pgpool:
-    image: ${DOCKER_REGISTRY:-localhost:5000}/pgpool:${pg_version:-1.0.1}
+    image: registry.local.wallacearizona.us/pgpool:1.0.1
+    hostname: pgpool
     ports:
-      - 9999:9999
+      - target: 9999
+        published: 9999
+        mode: ingress
     environment:
       PGMASTER_NODE_NAME: pg01
       PG_BACKEND_NODE_LIST: 0:pg01:5432:1:/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/data:ALLOW_TO_FAILOVER,2:pg03:5432:1:/data:ALLOW_TO_FAILOVER
-      # csv list of backend postgres databases, each backend db contains (separated by :)
-      # number (start with 0):host name:postgres port (default 5432):data dir (default /data):flag ALLOW_TO_FAILOVER or DISALLOW_TO_FAILOVER
-      # not needed when there is a single postgres DB
       PGP_NODE_NAME: pgpool
       REPMGRPWD: rep123
       FAILOVER_MODE: automatic
@@ -103,15 +193,38 @@ services:
       PGPOOL_LOG_CONNECTIONS: "off"
     networks:
       - pgcluster_network
-    depends_on:
-      - pg01
-      - pg02
-      - pg03
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+      labels:
+        - "com.wallacearizona.service=pgpool"
+        - "com.wallacearizona.cluster=pgcluster"
 
   manager:
-    image: ${DOCKER_REGISTRY:-localhost:5000}/manager:${pg_version:-1.0.1}
+    image: registry.local.wallacearizona.us/manager:1.0.1
+    hostname: manager
     ports:
-      - 8080:8080
+      - target: 8080
+        published: 8080
+        mode: ingress
     environment:
       PG_BACKEND_NODE_LIST: 0:pg01:5432:1:/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/data:ALLOW_TO_FAILOVER,2:pg03:5432:1:/data:ALLOW_TO_FAILOVER
       REPMGRPWD: rep123
@@ -120,15 +233,28 @@ services:
       - pgcluster_network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+      labels:
+        - "com.wallacearizona.service=manager"
+        - "com.wallacearizona.cluster=pgcluster"
 
-volumes:
-  pg01db:
-  pg02db:
-  pg03db:
-  pg01arc:
-  pg02arc:
-  pg03arc:
-
-networks:
-  pgcluster_network:
-    driver: bridge
