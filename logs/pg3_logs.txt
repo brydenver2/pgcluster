@@ -1,87 +1,204 @@
-2025-12-06 20:42:06,281 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
-2025-12-06 20:42:06,285 INFO RPC interface 'supervisor' initialized
-2025-12-06 20:42:06,285 CRIT Server 'unix_http_server' running without any HTTP authentication checking
-2025-12-06 20:42:06,285 INFO supervisord started with pid 1
-2025-12-06 20:42:07,288 INFO spawned: 'repmgr' with pid 7
-2025-12-06 20:42:07,291 INFO spawned: 'postgres' with pid 8
-2025-12-06 20:42:07,293 INFO spawned: 'sshd' with pid 9
+2025-12-06 21:02:28,401 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-12-06 21:02:28,405 INFO RPC interface 'supervisor' initialized
+2025-12-06 21:02:28,405 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2025-12-06 21:02:28,405 INFO supervisord started with pid 1
+2025-12-06 21:02:29,409 INFO spawned: 'repmgr' with pid 7
+2025-12-06 21:02:29,411 INFO spawned: 'postgres' with pid 8
+2025-12-06 21:02:29,413 INFO spawned: 'sshd' with pid 9
 sleep 60 before starting repmgrd
-2025-12-06 20:42:07,296 INFO success: postgres entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
+2025-12-06 21:02:29,415 INFO success: postgres entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
 id is : postgres
-2025-12-06 20:42:07.1765053727 - INFO - Start initdb on host pg03
-2025-12-06 20:42:07.1765053727 - INFO - MSLIST: myservice
-2025-12-06 20:42:07.1765053727 - INFO - MSOWNERPWDLIST: myservice_owner
-2025-12-06 20:42:07.1765053727 - INFO - MSUSERPWDLIST: myservice_user
-2025-12-06 20:42:07.1765053727 - INFO - PGDATA: /data
-2025-12-06 20:42:07.1765053727 - INFO - INITIAL_NODE_TYPE: slave
-2025-12-06 20:42:07.1765053727 - INFO - NODE_ID: 3
-2025-12-06 20:42:07.1765053727 - INFO - NODE_NAME: pg03
-2025-12-06 20:42:07.1765053727 - INFO - ARCHIVELOG: 1
-2025-12-06 20:42:07.1765053727 - INFO - PG_MASTER_NODE_NAME: pg01
-2025-12-06 20:42:07.1765053727 - INFO - docker: yes
-2025-12-06 20:42:07.1765053727 - INFO - REPMGRD_FAILOVER_MODE: manual
-2025-12-06 20:42:07.1765053727 - INFO - repmgr password set via env
-2025-12-06 20:42:07.1765053727 - INFO - setup .pgpass for replication and for repmgr
-2025-12-06 20:42:07.1765053727 - INFO - File /data/postgresql.conf already exist
-2025-12-06 20:42:07.1765053727 - INFO - Checking if repmgr database and extension need to be set up
+2025-12-06 21:02:29.1765054949 - INFO - Start initdb on host pg03
+2025-12-06 21:02:29.1765054949 - INFO - MSLIST: myservice
+2025-12-06 21:02:29.1765054949 - INFO - MSOWNERPWDLIST: myservice_owner
+2025-12-06 21:02:29.1765054949 - INFO - MSUSERPWDLIST: myservice_user
+2025-12-06 21:02:29.1765054949 - INFO - PGDATA: /data
+2025-12-06 21:02:29.1765054949 - INFO - INITIAL_NODE_TYPE: slave
+2025-12-06 21:02:29.1765054949 - INFO - NODE_ID: 3
+2025-12-06 21:02:29.1765054949 - INFO - NODE_NAME: pg03
+2025-12-06 21:02:29.1765054949 - INFO - ARCHIVELOG: 1
+2025-12-06 21:02:29.1765054949 - INFO - PG_MASTER_NODE_NAME: pg01
+2025-12-06 21:02:29.1765054949 - INFO - docker: yes
+2025-12-06 21:02:29.1765054949 - INFO - REPMGRD_FAILOVER_MODE: manual
+2025-12-06 21:02:29.1765054949 - INFO - repmgr password set via env
+2025-12-06 21:02:29.1765054949 - INFO - setup .pgpass for replication and for repmgr
+2025-12-06 21:02:29.1765054949 - INFO - File /data/postgresql.conf already exist
+2025-12-06 21:02:29.1765054949 - INFO - Checking if repmgr database and extension need to be set up
 pg_ctl: another server might be running; trying to start server anyway
-waiting for server to start....2025-12-06 20:42:07.418 UTC [40] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
-2025-12-06 20:42:07.418 UTC [40] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-2025-12-06 20:42:07.418 UTC [40] LOG:  listening on IPv6 address "::", port 5432
-2025-12-06 20:42:07.430 UTC [40] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2025-12-06 20:42:07.440 UTC [43] LOG:  database system was interrupted while in recovery at log time 2025-12-06 20:16:33 UTC
-2025-12-06 20:42:07.440 UTC [43] HINT:  If this has occurred more than once some data might be corrupted and you might need to choose an earlier recovery target.
+waiting for server to start....2025-12-06 21:02:29.553 UTC [40] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+2025-12-06 21:02:29.554 UTC [40] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2025-12-06 21:02:29.554 UTC [40] LOG:  listening on IPv6 address "::", port 5432
+2025-12-06 21:02:29.571 UTC [40] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-12-06 21:02:29.600 UTC [43] LOG:  database system was interrupted while in recovery at log time 2025-12-06 20:16:33 UTC
+2025-12-06 21:02:29.600 UTC [43] HINT:  If this has occurred more than once some data might be corrupted and you might need to choose an earlier recovery target.
 cp: cannot stat '/archive/00000002.history': No such file or directory
 cp: cannot stat '/archive/000000010000000000000018': No such file or directory
-2025-12-06 20:42:07.551 UTC [43] LOG:  entering standby mode
-2025-12-06 20:42:07.557 UTC [43] LOG:  redo starts at 0/180000A0
+2025-12-06 21:02:29.750 UTC [43] LOG:  entering standby mode
+2025-12-06 21:02:29.804 UTC [43] LOG:  redo starts at 0/180000A0
 cp: cannot stat '/archive/000000010000000000000019': No such file or directory
-2025-12-06 20:42:07.560 UTC [43] LOG:  consistent recovery state reached at 0/180072C0
-2025-12-06 20:42:07.560 UTC [40] LOG:  database system is ready to accept read-only connections
+2025-12-06 21:02:29.808 UTC [43] LOG:  consistent recovery state reached at 0/180072C0
+2025-12-06 21:02:29.808 UTC [40] LOG:  database system is ready to accept read-only connections
+ done
+server started
 cp: cannot stat '/archive/00000001000000000000001A': No such file or directory
 cp: cannot stat '/archive/00000001000000000000001B': No such file or directory
 cp: cannot stat '/archive/00000001000000000000001C': No such file or directory
 cp: cannot stat '/archive/00000001000000000000001D': No such file or directory
-2025-12-06 20:42:07.570 UTC [43] LOG:  invalid record length at 0/1D0000A0: expected at least 24, got 0
- done
-server started
-2025-12-06 20:42:07.590 UTC [58] LOG:  started streaming WAL from primary at 0/1D000000 on timeline 1
-2025-12-06 20:42:07.1765053727 - INFO - repmgr user already exists
-2025-12-06 20:42:07.1765053727 - INFO - repmgr database already exists
-2025-12-06 20:42:07.1765053727 - INFO - repmgr extension already installed
-2025-12-06 20:42:07.1765053727 - INFO - Checking if node is registered in repmgr metadata
-2025-12-06 20:42:07.1765053727 - INFO - Node not registered, registering now
-2025-12-06 20:42:07.1765053727 - INFO - This node is a standby, checking if primary is accessible before registering
-2025-12-06 20:42:07.1765053727 - INFO - Checking connectivity to primary pg01 (attempt 1/6)
-2025-12-06 20:42:07.864 UTC [58] LOG:  replication terminated by primary server
-2025-12-06 20:42:07.864 UTC [58] DETAIL:  End of WAL reached on timeline 1 at 0/1E0000A0.
-2025-12-06 20:42:07.864 UTC [58] FATAL:  could not send end-of-streaming message to primary: server closed the connection unexpectedly
+cp: cannot stat '/archive/00000001000000000000001E': No such file or directory
+cp: cannot stat '/archive/00000001000000000000001F': No such file or directory
+2025-12-06 21:02:29.822 UTC [43] LOG:  invalid record length at 0/1F0000A0: expected at least 24, got 0
+2025-12-06 21:02:29.858 UTC [64] LOG:  started streaming WAL from primary at 0/1F000000 on timeline 1
+2025-12-06 21:02:29.1765054949 - INFO - repmgr user already exists
+2025-12-06 21:02:29.1765054949 - INFO - repmgr database already exists
+2025-12-06 21:02:29.1765054949 - INFO - repmgr extension already installed
+2025-12-06 21:02:29.1765054949 - INFO - Checking if node is registered in repmgr metadata
+2025-12-06 21:02:30.1765054950 - INFO - Node not registered, registering now
+2025-12-06 21:02:30.1765054950 - INFO - This node is a standby, checking if primary is accessible before registering
+2025-12-06 21:02:30.1765054950 - INFO - Checking connectivity to primary pg01 (attempt 1/6)
+2025-12-06 21:02:30.1765054950 - INFO - Connection attempt result: 2
+2025-12-06 21:02:30.1765054950 - INFO - Primary not ready yet (error code 2), waiting 5 seconds...
+2025-12-06 21:02:30.210 UTC [64] LOG:  replication terminated by primary server
+2025-12-06 21:02:30.210 UTC [64] DETAIL:  End of WAL reached on timeline 1 at 0/200000A0.
+2025-12-06 21:02:30.210 UTC [64] FATAL:  could not send end-of-streaming message to primary: server closed the connection unexpectedly
 		This probably means the server terminated abnormally
 		before or while processing the request.
 	no COPY in progress
 cp: cannot stat '/archive/00000002.history': No such file or directory
-cp: cannot stat '/archive/00000001000000000000001E': No such file or directory
-2025-12-06 20:42:07.869 UTC [43] LOG:  invalid record length at 0/1E0000A0: expected at least 24, got 0
-2025-12-06 20:42:07.874 UTC [85] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.4.6), port 5432 failed: Connection refused
+cp: cannot stat '/archive/000000010000000000000020': No such file or directory
+2025-12-06 21:02:30.216 UTC [43] LOG:  invalid record length at 0/200000A0: expected at least 24, got 0
+2025-12-06 21:02:30.221 UTC [93] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.4.3), port 5432 failed: Connection refused
 		Is the server running on that host and accepting TCP/IP connections?
-	connection to server at "pg01" (10.0.4.5), port 5432 failed: Connection refused
+	connection to server at "pg01" (10.0.4.2), port 5432 failed: Connection refused
 		Is the server running on that host and accepting TCP/IP connections?
 cp: cannot stat '/archive/00000002.history': No such file or directory
-2025-12-06 20:42:07.1765053727 - INFO - Connection attempt result: 2
-2025-12-06 20:42:07.876 UTC [43] LOG:  waiting for WAL to become available at 0/1E0000B8
-2025-12-06 20:42:07.1765053727 - INFO - Primary not ready yet, waiting 5 seconds...
-2025-12-06 20:42:08,879 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-2025-12-06 20:42:08,879 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-cp: cannot stat '/archive/00000001000000000000001E': No such file or directory
-2025-12-06 20:42:12.1765053732 - INFO - Checking connectivity to primary pg01 (attempt 2/6)
-2025-12-06 20:42:12.888 UTC [93] LOG:  started streaming WAL from primary at 0/1E000000 on timeline 1
-[2025-12-06 20:43:07] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
-[2025-12-06 20:43:07] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
-[2025-12-06 20:43:07] [INFO] connecting to database "host=pg03 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
-[2025-12-06 20:43:07] [ERROR] no metadata record found for this node - terminating
-[2025-12-06 20:43:07] [HINT] check that 'repmgr (primary|standby|witness) register' was executed for this node
-[2025-12-06 20:43:07] [INFO] repmgrd terminating...
-2025-12-06 20:43:08,327 WARN exited: repmgr (exit status 1; not expected)
-2025-12-06 20:43:09,330 INFO spawned: 'repmgr' with pid 97
+2025-12-06 21:02:30.224 UTC [43] LOG:  waiting for WAL to become available at 0/200000B8
+2025-12-06 21:02:31,225 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-06 21:02:31,225 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-06 21:02:35.1765054955 - INFO - Checking connectivity to primary pg01 (attempt 2/6)
+cp: cannot stat '/archive/000000010000000000000020': No such file or directory
+2025-12-06 21:02:35.241 UTC [101] LOG:  started streaming WAL from primary at 0/20000000 on timeline 1
+2025-12-06 21:02:38.1765054958 - INFO - Connection attempt result: 124
+2025-12-06 21:02:38.1765054958 - INFO - Connection attempt timed out after 3 seconds
+2025-12-06 21:02:43.1765054963 - INFO - Checking connectivity to primary pg01 (attempt 3/6)
+2025-12-06 21:02:46.1765054966 - INFO - Connection attempt result: 124
+2025-12-06 21:02:46.1765054966 - INFO - Connection attempt timed out after 3 seconds
+2025-12-06 21:02:51.1765054971 - INFO - Checking connectivity to primary pg01 (attempt 4/6)
+2025-12-06 21:02:54.1765054974 - INFO - Connection attempt result: 124
+2025-12-06 21:02:54.1765054974 - INFO - Connection attempt timed out after 3 seconds
+2025-12-06 21:02:59.1765054979 - INFO - Checking connectivity to primary pg01 (attempt 5/6)
+2025-12-06 21:03:02.1765054982 - INFO - Connection attempt result: 124
+2025-12-06 21:03:02.1765054982 - INFO - Connection attempt timed out after 3 seconds
+2025-12-06 21:03:07.1765054987 - INFO - Checking connectivity to primary pg01 (attempt 6/6)
+2025-12-06 21:03:10.1765054990 - INFO - Connection attempt result: 124
+2025-12-06 21:03:10.1765054990 - INFO - Connection attempt timed out after 3 seconds
+2025-12-06 21:03:15.1765054995 - INFO - WARNING: Primary not accessible after 30 seconds, skipping registration
+2025-12-06 21:03:15.1765054995 - INFO - Node will attempt to register when repmgrd starts
+waiting for server to shut down....2025-12-06 21:03:15.180 UTC [40] LOG:  received fast shutdown request
+2025-12-06 21:03:15.185 UTC [40] LOG:  aborting any active transactions
+2025-12-06 21:03:15.185 UTC [101] FATAL:  terminating walreceiver process due to administrator command
+2025-12-06 21:03:15.188 UTC [41] LOG:  shutting down
+2025-12-06 21:03:15.188 UTC [41] LOG:  restartpoint starting: shutdown immediate
+2025-12-06 21:03:15.238 UTC [41] LOG:  restartpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 8 recycled; write=0.012 s, sync=0.004 s, total=0.051 s; sync files=9, longest=0.003 s, average=0.001 s; distance=131072 kB, estimate=131072 kB; lsn=0/20000028, redo lsn=0/20000028
+2025-12-06 21:03:15.238 UTC [41] LOG:  recovery restart point at 0/20000028
+2025-12-06 21:03:15.238 UTC [41] DETAIL:  Last completed transaction was at log time 2025-12-06 20:45:18.170021+00.
+2025-12-06 21:03:15.245 UTC [40] LOG:  database system is shut down
+ done
+server stopped
+2025-12-06 21:03:15,280 INFO reaped unknown pid 40 (exit status 0)
+UID          PID    PPID  C STIME TTY          TIME CMD
+root           1       0  0 21:02 ?        00:00:00 /usr/bin/python3 /usr/bin/supervisord --configuration=/etc/supervisor/supervisord.conf
+postgres       7       1  0 21:02 ?        00:00:00 /bin/bash /scripts/start_repmgr.sh
+postgres       8       1  0 21:02 ?        00:00:00 /bin/bash /scripts/initdb.sh
+root           9       1  0 21:02 ?        00:00:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+postgres      10       7  0 21:02 ?        00:00:00 sleep 60
+postgres     132       8  0 21:03 ?        00:00:00 ps -ef
+2025-12-06 21:03:15.1765054995 - INFO - start postgres in foreground
+2025-12-06 21:03:15.322 UTC [8] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+2025-12-06 21:03:15.322 UTC [8] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2025-12-06 21:03:15.322 UTC [8] LOG:  listening on IPv6 address "::", port 5432
+2025-12-06 21:03:15.330 UTC [8] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-12-06 21:03:15.342 UTC [136] LOG:  database system was shut down in recovery at 2025-12-06 21:03:15 UTC
+cp: cannot stat '/archive/00000002.history': No such file or directory
+cp: cannot stat '/archive/000000010000000000000020': No such file or directory
+2025-12-06 21:03:15.346 UTC [136] LOG:  entering standby mode
+2025-12-06 21:03:15.353 UTC [136] LOG:  redo starts at 0/200000A0
+2025-12-06 21:03:15.353 UTC [136] LOG:  consistent recovery state reached at 0/200000D8
+2025-12-06 21:03:15.353 UTC [136] LOG:  invalid record length at 0/200000D8: expected at least 24, got 0
+2025-12-06 21:03:15.353 UTC [8] LOG:  database system is ready to accept read-only connections
+2025-12-06 21:03:15.374 UTC [141] LOG:  started streaming WAL from primary at 0/20000000 on timeline 1
+[2025-12-06 21:03:29] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-06 21:03:29] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-06 21:03:29] [INFO] connecting to database "host=pg03 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
+[2025-12-06 21:03:29] [ERROR] no metadata record found for this node - terminating
+[2025-12-06 21:03:29] [HINT] check that 'repmgr (primary|standby|witness) register' was executed for this node
+[2025-12-06 21:03:29] [INFO] repmgrd terminating...
+2025-12-06 21:03:29,448 WARN exited: repmgr (exit status 1; not expected)
+2025-12-06 21:03:30,451 INFO spawned: 'repmgr' with pid 143
 sleep 60 before starting repmgrd
-2025-12-06 20:43:10,337 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-06 21:03:31,459 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+[2025-12-06 21:04:30] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-06 21:04:30] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-06 21:04:30] [INFO] connecting to database "host=pg03 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
+[2025-12-06 21:04:30] [ERROR] no metadata record found for this node - terminating
+[2025-12-06 21:04:30] [HINT] check that 'repmgr (primary|standby|witness) register' was executed for this node
+[2025-12-06 21:04:30] [INFO] repmgrd terminating...
+2025-12-06 21:04:30,485 WARN exited: repmgr (exit status 1; not expected)
+2025-12-06 21:04:31,488 INFO spawned: 'repmgr' with pid 146
+sleep 60 before starting repmgrd
+2025-12-06 21:04:32,495 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+[2025-12-06 21:05:31] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-06 21:05:31] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-06 21:05:31] [INFO] connecting to database "host=pg03 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
+[2025-12-06 21:05:31] [ERROR] no metadata record found for this node - terminating
+[2025-12-06 21:05:31] [HINT] check that 'repmgr (primary|standby|witness) register' was executed for this node
+[2025-12-06 21:05:31] [INFO] repmgrd terminating...
+2025-12-06 21:05:31,520 WARN exited: repmgr (exit status 1; not expected)
+2025-12-06 21:05:32,522 INFO spawned: 'repmgr' with pid 149
+sleep 60 before starting repmgrd
+2025-12-06 21:05:33,529 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+[2025-12-06 21:06:32] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-06 21:06:32] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-06 21:06:32] [INFO] connecting to database "host=pg03 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
+[2025-12-06 21:06:32] [ERROR] no metadata record found for this node - terminating
+[2025-12-06 21:06:32] [HINT] check that 'repmgr (primary|standby|witness) register' was executed for this node
+[2025-12-06 21:06:32] [INFO] repmgrd terminating...
+2025-12-06 21:06:32,554 WARN exited: repmgr (exit status 1; not expected)
+2025-12-06 21:06:33,557 INFO spawned: 'repmgr' with pid 152
+sleep 60 before starting repmgrd
+2025-12-06 21:06:34,564 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+[2025-12-06 21:07:33] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-06 21:07:33] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-06 21:07:33] [INFO] connecting to database "host=pg03 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
+[2025-12-06 21:07:33] [ERROR] no metadata record found for this node - terminating
+[2025-12-06 21:07:33] [HINT] check that 'repmgr (primary|standby|witness) register' was executed for this node
+[2025-12-06 21:07:33] [INFO] repmgrd terminating...
+2025-12-06 21:07:33,588 WARN exited: repmgr (exit status 1; not expected)
+2025-12-06 21:07:34,591 INFO spawned: 'repmgr' with pid 155
+sleep 60 before starting repmgrd
+2025-12-06 21:07:35,598 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-06 21:07:42,605 INFO reaped unknown pid 163 (exit status 255)
+2025-12-06 21:07:42,605 INFO reaped unknown pid 172 (exit status 255)
+2025-12-06 21:08:15.427 UTC [134] LOG:  restartpoint starting: time
+2025-12-06 21:08:16.465 UTC [134] LOG:  restartpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.018 s, sync=0.007 s, total=1.039 s; sync files=9, longest=0.003 s, average=0.001 s; distance=53 kB, estimate=53 kB; lsn=0/2000ED70, redo lsn=0/2000D4B8
+2025-12-06 21:08:16.465 UTC [134] LOG:  recovery restart point at 0/2000D4B8
+2025-12-06 21:08:16.465 UTC [134] DETAIL:  Last completed transaction was at log time 2025-12-06 21:08:16.121181+00.
+[2025-12-06 21:08:34] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-06 21:08:34] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-06 21:08:34] [INFO] connecting to database "host=pg03 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
+[2025-12-06 21:08:34] [ERROR] no metadata record found for this node - terminating
+[2025-12-06 21:08:34] [HINT] check that 'repmgr (primary|standby|witness) register' was executed for this node
+[2025-12-06 21:08:34] [INFO] repmgrd terminating...
+2025-12-06 21:08:34,624 WARN exited: repmgr (exit status 1; not expected)
+2025-12-06 21:08:35,627 INFO spawned: 'repmgr' with pid 178
+sleep 60 before starting repmgrd
+2025-12-06 21:08:36,635 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+[2025-12-06 21:09:35] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-06 21:09:35] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-06 21:09:35] [INFO] connecting to database "host=pg03 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
+[2025-12-06 21:09:35] [ERROR] no metadata record found for this node - terminating
+[2025-12-06 21:09:35] [HINT] check that 'repmgr (primary|standby|witness) register' was executed for this node
+[2025-12-06 21:09:35] [INFO] repmgrd terminating...
+2025-12-06 21:09:35,661 WARN exited: repmgr (exit status 1; not expected)
+2025-12-06 21:09:36,664 INFO spawned: 'repmgr' with pid 181
+sleep 60 before starting repmgrd
+2025-12-06 21:09:37,671 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

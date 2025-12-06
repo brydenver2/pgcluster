@@ -46,6 +46,12 @@ services:
       - pg01arc:/archive
     networks:
       - pgcluster_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres && psql -U repmgr -d repmgr -tAc 'SELECT COUNT(*) FROM repmgr.nodes' | grep -q '[0-9]' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     deploy:
       replicas: 1
       placement:
@@ -95,6 +101,12 @@ services:
       - pg02arc:/archive
     networks:
       - pgcluster_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     deploy:
       replicas: 1
       placement:
@@ -144,6 +156,12 @@ services:
       - pg03arc:/archive
     networks:
       - pgcluster_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     deploy:
       replicas: 1
       placement:
@@ -193,6 +211,13 @@ services:
       PGPOOL_LOG_CONNECTIONS: "off"
     networks:
       - pgcluster_network
+    depends_on:
+      pg01:
+        condition: service_started
+      pg02:
+        condition: service_started
+      pg03:
+        condition: service_started
     deploy:
       replicas: 1
       placement:
@@ -233,6 +258,8 @@ services:
       - pgcluster_network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - pgpool
     deploy:
       replicas: 1
       placement:

@@ -365,24 +365,31 @@ EOF
       fi
     else
       log_info "This node is a standby, checking if primary is accessible before registering"
-      # Wait a bit for the primary to be ready (max 30 seconds)
+      # Wait for the primary to be ready (max 2 minutes)
       PRIMARY_READY=0
-      for i in 1 2 3 4 5 6; do
-        log_info "Checking connectivity to primary ${PG_MASTER_NODE_NAME} (attempt $i/6)"
-        # Use timeout command to force kill psql if it hangs
-        timeout 3 psql -h ${PG_MASTER_NODE_NAME} -U repmgr -d repmgr -tAc "SELECT 1" > /tmp/psql_test.out 2>&1
+      for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+        log_info "Checking connectivity to primary ${PG_MASTER_NODE_NAME} (attempt $i/12)"
+        # Use timeout command to force kill psql if it hangs (10 seconds timeout)
+        timeout 10 psql -h ${PG_MASTER_NODE_NAME} -U repmgr -d repmgr -tAc "SELECT 1" > /tmp/psql_test.out 2>&1
         RESULT=$?
         log_info "Connection attempt result: $RESULT"
         if [ $RESULT -eq 0 ] ; then
           log_info "Primary ${PG_MASTER_NODE_NAME} is accessible"
-          PRIMARY_READY=1
-          break
+          # Additional check: verify primary has repmgr metadata initialized
+          NODE_COUNT=$(timeout 10 psql -h ${PG_MASTER_NODE_NAME} -U repmgr -d repmgr -tAc "SELECT COUNT(*) FROM repmgr.nodes" 2>/dev/null)
+          if [ $? -eq 0 ] && [ "$NODE_COUNT" -ge 1 ] ; then
+            log_info "Primary has $NODE_COUNT nodes registered, ready to proceed"
+            PRIMARY_READY=1
+            break
+          else
+            log_info "Primary is up but repmgr metadata not ready yet, waiting..."
+          fi
         elif [ $RESULT -eq 124 ] ; then
-          log_info "Connection attempt timed out after 3 seconds"
+          log_info "Connection attempt timed out after 10 seconds"
         else
-          log_info "Primary not ready yet (error code $RESULT), waiting 5 seconds..."
+          log_info "Primary not ready yet (error code $RESULT), waiting 10 seconds..."
         fi
-        sleep 5
+        sleep 10
       done
       
       if [ $PRIMARY_READY -eq 1 ] ; then
@@ -394,7 +401,7 @@ EOF
           log_info "Standby registration successful"
         fi
       else
-        log_info "WARNING: Primary not accessible after 30 seconds, skipping registration"
+        log_info "WARNING: Primary not accessible after 2 minutes, skipping registration"
         log_info "Node will attempt to register when repmgrd starts"
       fi
     fi
