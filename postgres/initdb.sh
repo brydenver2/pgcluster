@@ -298,7 +298,15 @@ EOF
      sudo rm -rf ${PGDATA}/*
      repmgr -h ${PG_MASTER_NODE_NAME} -U repmgr -d repmgr -D ${PGDATA} -f /etc/repmgr/${PGVER}/repmgr.conf standby clone
      pg_ctl -D ${PGDATA} start -w
-     repmgr -f /etc/repmgr/${PGVER}/repmgr.conf standby register
+     log_info "Standby started, waiting 5 seconds for replication to stabilize"
+     sleep 5
+     log_info "Registering standby with repmgr (using --force to handle catchup state)"
+     repmgr -f /etc/repmgr/${PGVER}/repmgr.conf standby register --force
+     if [ $? -ne 0 ] ; then
+       log_info "WARNING: Standby registration failed, but continuing"
+     else
+       log_info "Standby registration successful"
+     fi
      pg_ctl stop
     else
      log_info "Master is not ready, standby will not be initialized"
