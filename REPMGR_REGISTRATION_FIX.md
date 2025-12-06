@@ -49,7 +49,7 @@ if [ "$NODE_REGISTERED" = "0" ] ; then
   # Determine if this is a primary or standby by checking recovery status
   IS_IN_RECOVERY=$(psql -tAc "SELECT pg_is_in_recovery()")
   if [ "$IS_IN_RECOVERY" = "f" ] ; then
-    log_info "This node is a primary, registering as master"
+    log_info "This node is a primary, registering as primary"
     repmgr -f /etc/repmgr/${PGVER}/repmgr.conf -v primary register --force
     if [ $? -ne 0 ] ; then
       log_info "WARNING: Failed to register node as primary"
