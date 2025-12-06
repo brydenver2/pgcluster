@@ -296,6 +296,24 @@ EOF
     log_info "repmgr extension already installed"
   fi
   
+  # Check if this node is registered in repmgr metadata
+  log_info "Checking if node is registered in repmgr metadata"
+  NODE_REGISTERED=$(psql -d repmgr -U repmgr -tAc "SELECT COUNT(*) FROM repmgr.nodes WHERE node_id=${NODE_ID}")
+  if [ "$NODE_REGISTERED" = "0" ] ; then
+    log_info "Node not registered, registering now"
+    # Determine if this is a primary or standby by checking recovery status
+    IS_IN_RECOVERY=$(psql -tAc "SELECT pg_is_in_recovery()")
+    if [ "$IS_IN_RECOVERY" = "f" ] ; then
+      log_info "This node is a primary, registering as master"
+      repmgr -f /etc/repmgr/${PGVER}/repmgr.conf -v primary register --force
+    else
+      log_info "This node is a standby, registering as standby"
+      repmgr -f /etc/repmgr/${PGVER}/repmgr.conf -v standby register --force
+    fi
+  else
+    log_info "Node already registered in repmgr metadata"
+  fi
+  
   # Stop postgres before starting in foreground
   pg_ctl stop -w
 fi
