@@ -21,21 +21,16 @@ RUN useradd -u 50010 -m postgres
 RUN install -d /usr/share/postgresql-common/pgdg && \
     curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc && \
     sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-RUN apt-get update && apt-get install -y postgresql-${MAJORVER} postgresql-contrib-${MAJORVER} postgresql-server-dev-${MAJORVER} build-essential git && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install Dalibo Labs repository for PostgreSQL Anonymizer
+RUN sh -c 'echo "deb http://apt.dalibo.org/labs $(lsb_release -cs)-dalibo main" > /etc/apt/sources.list.d/dalibo-labs.list' && \
+    curl -fsSL -o /etc/apt/trusted.gpg.d/dalibo-labs.gpg https://apt.dalibo.org/labs/debian-dalibo.gpg
+RUN apt-get update && apt-get install -y postgresql-${MAJORVER} postgresql-contrib-${MAJORVER} && apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install pgpool2 and extensions
 RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-pgpool2 pgpool2 && apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install repmgr
 RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-repmgr && apt-get clean && rm -rf /var/lib/apt/lists/*
-# Install pgvector extension
-RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-pgvector && apt-get clean && rm -rf /var/lib/apt/lists/*
-# Install PostgreSQL Anonymizer from source
-RUN cd /tmp && \
-    git clone --depth 1 --branch 2.0.0 https://gitlab.com/dalibo/postgresql_anonymizer.git && \
-    cd postgresql_anonymizer && \
-    make extension && \
-    make install && \
-    cd / && \
-    rm -rf /tmp/postgresql_anonymizer
+# Install pgvector and PostgreSQL Anonymizer extensions
+RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-pgvector postgresql_anonymizer_${MAJORVER} && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /var/log/repmgr && chown postgres:postgres /var/log/repmgr
 RUN mkdir -p /etc/repmgr/${PGVER} && chown postgres:postgres /etc/repmgr/${PGVER}
 RUN mkdir -p /data /backup /archive && chown -R postgres:postgres /data /backup /archive && chmod 755 /data /archive
