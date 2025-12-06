@@ -187,12 +187,29 @@ create_microservices(){
 # this is needed in order to patch some files that are not persisted accross run
 # i.e. files that are outside the PGDATA directory (PGDATA being on shared volume)
 #
-if [ ! -z ${REPMGRPWD} ] ; then
+# Read repmgr password from file or environment
+if [ ! -z ${REPMGRPWD_FILE} ] && [ -f ${REPMGRPWD_FILE} ] ; then
+  REPMGRPWD=$(cat ${REPMGRPWD_FILE})
+  log_info "repmgr password loaded from file: ${REPMGRPWD_FILE}"
+elif [ ! -z ${REPMGRPWD} ] ; then
   log_info "repmgr password set via env"
 else
   REPMGRPWD=rep123
   log_info "repmgr password default to rep123"
 fi
+
+# Read postgres superuser password from file or environment
+if [ ! -z ${POSTGRES_PASSWORD_FILE} ] && [ -f ${POSTGRES_PASSWORD_FILE} ] ; then
+  PG_SUPERUSER_PWD=$(cat ${POSTGRES_PASSWORD_FILE})
+  log_info "postgres superuser password loaded from file: ${POSTGRES_PASSWORD_FILE}"
+elif [ ! -z ${POSTGRES_PASSWORD} ] ; then
+  log_info "postgres superuser password set via POSTGRES_PASSWORD env"
+  PG_SUPERUSER_PWD=${POSTGRES_PASSWORD}
+else
+  log_info "postgres superuser password defaults to REPMGRPWD"
+  PG_SUPERUSER_PWD=${REPMGRPWD}
+fi
+
 log_info "setup .pgpass for replication and for repmgr"
 echo "*:*:repmgr:repmgr:${REPMGRPWD}" > /home/postgres/.pgpass
 echo "*:*:replication:repmgr:${REPMGRPWD}" >> /home/postgres/.pgpass
@@ -266,8 +283,8 @@ EOF
      alter user repmgr set search_path to repmgr,"\$user",public;
      \q
 EOF
-    log_info "set password for postgres"
-    psql --command "alter user postgres with login password '${REPMGRPWD}';"
+    log_info "set password for postgres to: ${PG_SUPERUSER_PWD}"
+    psql --command "alter user postgres with login password '${PG_SUPERUSER_PWD}';"
     psql --command "create database repmgr with owner=repmgr ENCODING='UTF8' LC_COLLATE='en_US.UTF8';"
     log_info "Installing repmgr extension in repmgr database"
     psql -d repmgr -c "CREATE EXTENSION IF NOT EXISTS repmgr;"

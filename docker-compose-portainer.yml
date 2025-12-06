@@ -14,6 +14,12 @@ volumes:
   pg03arc:
     driver: local
 
+secrets:
+  postgres_password:
+    external: true
+  repmgr_password:
+    external: true
+
 networks:
   pgcluster_network:
     driver: overlay
@@ -27,6 +33,9 @@ services:
   pg01:
     image: registry.local.wallacearizona.us/pg:1.0.1
     hostname: pg01
+    secrets:
+      - postgres_password
+      - repmgr_password
     environment:
       INITIAL_NODE_TYPE: master
       NODE_ID: 1
@@ -34,7 +43,8 @@ services:
       MSLIST: "myservice"
       MSOWNERPWDLIST: "myservice_owner"
       MSUSERPWDLIST: "myservice_user"
-      REPMGRPWD: rep123
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      REPMGRPWD_FILE: /run/secrets/repmgr_password
       REPMGRD_FAILOVER_MODE: manual
       PGMASTER: pg01
     ports:
@@ -82,6 +92,9 @@ services:
   pg02:
     image: registry.local.wallacearizona.us/pg:1.0.1
     hostname: pg02
+    secrets:
+      - postgres_password
+      - repmgr_password
     environment:
       INITIAL_NODE_TYPE: slave
       NODE_ID: 2
@@ -89,7 +102,8 @@ services:
       MSLIST: "myservice"
       MSOWNERPWDLIST: "myservice_owner"
       MSUSERPWDLIST: "myservice_user"
-      REPMGRPWD: rep123
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      REPMGRPWD_FILE: /run/secrets/repmgr_password
       REPMGRD_FAILOVER_MODE: manual
       PGMASTER: pg01
     ports:
@@ -137,6 +151,9 @@ services:
   pg03:
     image: registry.local.wallacearizona.us/pg:1.0.1
     hostname: pg03
+    secrets:
+      - postgres_password
+      - repmgr_password
     environment:
       INITIAL_NODE_TYPE: slave
       NODE_ID: 3
@@ -144,7 +161,8 @@ services:
       MSLIST: "myservice"
       MSOWNERPWDLIST: "myservice_owner"
       MSUSERPWDLIST: "myservice_user"
-      REPMGRPWD: rep123
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      REPMGRPWD_FILE: /run/secrets/repmgr_password
       REPMGRD_FAILOVER_MODE: manual
       PGMASTER: pg01
     ports:
@@ -192,6 +210,8 @@ services:
   pgpool:
     image: registry.local.wallacearizona.us/pgpool:1.0.1
     hostname: pgpool
+    secrets:
+      - repmgr_password
     ports:
       - target: 9999
         published: 9999
@@ -200,7 +220,7 @@ services:
       PGMASTER_NODE_NAME: pg01
       PG_BACKEND_NODE_LIST: 0:pg01:5432:1:/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/data:ALLOW_TO_FAILOVER,2:pg03:5432:1:/data:ALLOW_TO_FAILOVER
       PGP_NODE_NAME: pgpool
-      REPMGRPWD: rep123
+      REPMGRPWD_FILE: /run/secrets/repmgr_password
       FAILOVER_MODE: automatic
       PGPOOL_HEALTH_CHECK_MAX_RETRIES: 3
       PGPOOL_HEALTH_CHECK_RETRY_DELAY: 1
@@ -243,13 +263,15 @@ services:
   manager:
     image: registry.local.wallacearizona.us/manager:1.0.1
     hostname: manager
+    secrets:
+      - repmgr_password
     ports:
       - target: 8080
         published: 8080
         mode: ingress
     environment:
       PG_BACKEND_NODE_LIST: 0:pg01:5432:1:/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/data:ALLOW_TO_FAILOVER,2:pg03:5432:1:/data:ALLOW_TO_FAILOVER
-      REPMGRPWD: rep123
+      REPMGRPWD_FILE: /run/secrets/repmgr_password
       DBHOST: pgpool
     networks:
       - pgcluster_network
