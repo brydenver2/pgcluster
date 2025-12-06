@@ -28,6 +28,8 @@ networks:
       encrypted: "true"
     labels:
       - "com.wallacearizona.network=pgcluster"
+  traefik_proxy:
+    external: true
 
 services:
   pg01:
@@ -212,10 +214,6 @@ services:
     hostname: pgpool
     secrets:
       - repmgr_password
-    ports:
-      - target: 9999
-        published: 9999
-        mode: ingress
     environment:
       PGMASTER_NODE_NAME: pg01
       PG_BACKEND_NODE_LIST: 0:pg01:5432:1:/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/data:ALLOW_TO_FAILOVER,2:pg03:5432:1:/data:ALLOW_TO_FAILOVER
@@ -231,6 +229,7 @@ services:
       PGPOOL_LOG_CONNECTIONS: "off"
     networks:
       - pgcluster_network
+      - traefik_proxy
     depends_on:
       - pg01
       - pg02
@@ -259,22 +258,25 @@ services:
       labels:
         - "com.wallacearizona.service=pgpool"
         - "com.wallacearizona.cluster=pgcluster"
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik_proxy"
+        - "traefik.tcp.routers.pgpool.entrypoints=postgres"
+        - "traefik.tcp.routers.pgpool.rule=HostSNI(`*`)"
+        - "traefik.tcp.routers.pgpool.tls.passthrough=true"
+        - "traefik.tcp.services.pgpool.loadbalancer.server.port=9999"
 
   manager:
     image: registry.local.wallacearizona.us/manager:1.0.1
     hostname: manager
     secrets:
       - repmgr_password
-    ports:
-      - target: 8080
-        published: 8080
-        mode: ingress
     environment:
       PG_BACKEND_NODE_LIST: 0:pg01:5432:1:/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/data:ALLOW_TO_FAILOVER,2:pg03:5432:1:/data:ALLOW_TO_FAILOVER
       REPMGRPWD_FILE: /run/secrets/repmgr_password
       DBHOST: pgpool
     networks:
       - pgcluster_network
+      - traefik_proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
@@ -303,4 +305,13 @@ services:
       labels:
         - "com.wallacearizona.service=manager"
         - "com.wallacearizona.cluster=pgcluster"
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik_proxy"
+        - "traefik.http.routers.pgmanager.entrypoints=websecure"
+        - "traefik.http.routers.pgmanager.rule=Host(`pgclstr.local.wallacearizona.us`) && PathPrefix(`/manager`)"
+        - "traefik.http.routers.pgmanager.tls=true"
+        - "traefik.http.routers.pgmanager.tls.certresolver=production"
+        - "traefik.http.routers.pgmanager.middlewares=pgmanager-stripprefix"
+        - "traefik.http.middlewares.pgmanager-stripprefix.stripprefix.prefixes=/manager"
+        - "traefik.http.services.pgmanager.loadbalancer.server.port=8080"
 
