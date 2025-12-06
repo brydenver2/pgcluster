@@ -79,6 +79,23 @@ wait_for_master(){
  NBRTRY=24
 
  log_info "waiting for master on ${HOST} to be ready"
+ 
+ # First, check DNS resolution
+ log_info "Checking DNS resolution for ${HOST}"
+ if ! getent hosts ${HOST} > /dev/null 2>&1 ; then
+   log_info "WARNING: Cannot resolve hostname ${HOST}, waiting for DNS..."
+   # Wait a bit for DNS to be available
+   for i in 1 2 3 4 5; do
+     sleep 2
+     if getent hosts ${HOST} > /dev/null 2>&1 ; then
+       log_info "DNS resolution for ${HOST} succeeded"
+       break
+     fi
+   done
+ else
+   log_info "DNS resolution for ${HOST} successful: $(getent hosts ${HOST})"
+ fi
+ 
  nbrlines=0
  while [ $nbrlines -lt 1 -a $NBRTRY -gt 0 ] ; do
   sleep $SLEEP_TIME
@@ -92,7 +109,15 @@ wait_for_master(){
   fi
   NBRTRY=$((NBRTRY-1))
  done
-
+ 
+ # Return success if we found at least one node, failure otherwise
+ if [ $nbrlines -ge 1 ] ; then
+   log_info "Master has $nbrlines nodes registered, proceeding with standby setup"
+   return 0
+ else
+   log_info "Master has no nodes registered after waiting, cannot proceed"
+   return 1
+ fi
 }
 
 log_info "Start initdb on host `hostname`"
@@ -107,10 +132,11 @@ MSLIST=${MSLIST-"keycloak,apiman,asset,ingest,playout"}
 NODE_ID=${NODE_ID:-1}
 NODE_NAME=${NODE_NAME:-"pg0${NODE_ID}"}
 ARCHIVELOG=${ARCHIVELOG:-1}
-PG_MASTER_NODE_NAME=${PG_MASTER_NODE_NAME:-pg01}
+PG_MASTER_NODE_NAME=${PGMASTER:-pg01}
 log_info "NODE_ID: $NODE_ID"
 log_info "NODE_NAME: $NODE_NAME"
 log_info "ARCHIVELOG: $ARCHIVELOG"
+log_info "PG_MASTER_NODE_NAME: $PG_MASTER_NODE_NAME"
 log_info "docker: ${docker}"
 # automatic or manual
 REPMGRD_FAILOVER_MODE=${REPMGRD_FAILOVER_MODE:-manual}
@@ -209,7 +235,8 @@ EOF
     echo "host     all           all        0.0.0.0/0            md5" >> $PGDATA/pg_hba.conf
     echo starting database
     ps -ef
-    pg_ctl -D ${PGDATA} start -o "-c 'listen_addresses=localhost'" -w 
+    # Start PostgreSQL listening on all addresses to allow repmgr registration to work
+    pg_ctl -D ${PGDATA} start -w 
     psql --command "create database phoenix ENCODING='UTF8' LC_COLLATE='en_US.UTF8';"
     create_microservices
     psql phoenix -c "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"";
@@ -262,8 +289,8 @@ else
   log_info "File ${PGDATA}/postgresql.conf already exist"
   # Ensure repmgr extension is installed even on restart
   log_info "Checking if repmgr database and extension need to be set up"
-  # Start postgres temporarily to check/install extension
-  pg_ctl -D ${PGDATA} start -o "-c 'listen_addresses=localhost'" -w
+  # Start postgres temporarily to check/install extension - listen on all addresses for repmgr
+  pg_ctl -D ${PGDATA} start -w
   
   # Check if repmgr user exists, create if not
   psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='repmgr'" | grep -q 1

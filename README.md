@@ -10,6 +10,10 @@
 - **[QUICKSTART.md](QUICKSTART.md)** - Get up and running in minutes
 - **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete deployment guide (Docker CLI, Swarm, Portainer)
 
+⚠️ **Having issues with Docker Swarm deployment?** See:
+- **[DOCKER_SWARM_FIX.md](DOCKER_SWARM_FIX.md)** - Comprehensive fix for repmgr registration issues
+- **[QUICK_FIX_SUMMARY.md](QUICK_FIX_SUMMARY.md)** - Quick reference for common problems
+
 ## Overview
 
 > **Note on Data Directories:** The examples in this README use `/u01/pg17/data` for the data directory path. If you're upgrading from an older version and want to keep your existing data, keep using your current path (e.g., `/u01/pg10/data`). The path is configurable via the `PG_BACKEND_NODE_LIST` environment variable and volume mount paths in the docker-compose files.
@@ -186,6 +190,49 @@ Any environment variable prefixed with PGPOOL_ will be injected in the pgpool co
 * the users are created via the script initdb.sh, have a look at it.
 * the postgres entrypoint creates a DB called phoenix
 * postgres unix user has uid 50010
+
+# Troubleshooting
+
+## Common Docker Swarm Issues
+
+If you're experiencing issues with your PostgreSQL cluster not initializing properly in Docker Swarm, particularly with repmgr registration failures, see **[DOCKER_SWARM_FIX.md](DOCKER_SWARM_FIX.md)** for detailed analysis and solutions.
+
+**Common symptoms:**
+- Primary node fails to register with repmgr
+- Standby nodes wait indefinitely for master
+- Pgpool cannot find the primary node
+- Error: `connection to server at "pg01" failed: Connection refused`
+
+**Quick fix:** The issue is typically caused by PostgreSQL starting with `listen_addresses=localhost` which prevents repmgr from connecting via the Docker Swarm overlay network. See [QUICK_FIX_SUMMARY.md](QUICK_FIX_SUMMARY.md) for the solution.
+
+## Viewing Logs
+
+For Docker Swarm deployments:
+```bash
+docker service logs -f pgcluster_pg01
+docker service logs -f pgcluster_pg02
+docker service logs -f pgcluster_pgpool
+```
+
+For standalone deployments:
+```bash
+docker logs -f pg01
+docker logs -f pgpool
+```
+
+## Cluster Status
+
+Check repmgr cluster status:
+```bash
+docker exec -it $(docker ps -q -f name=pg01) su - postgres -c \
+  "repmgr -f /etc/repmgr/17/repmgr.conf cluster show"
+```
+
+Check pgpool status:
+```bash
+docker exec -it $(docker ps -q -f name=pgpool) \
+  pcp_node_info -h localhost -p 9898 -U postgres -w
+```
 
 # use cases and scenarios
 

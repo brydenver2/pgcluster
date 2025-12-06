@@ -308,6 +308,11 @@ npm run lint
 - **Automatic Failover**: Can be handled by pgpool OR repmgr
   - Pgpool is recommended for better integration with connection pooling
   - Provides more stable failover behavior in production environments
+- **Network Configuration**: 
+  - PostgreSQL must listen on all interfaces (`listen_addresses='*'`) for repmgr to work in Docker Swarm
+  - Configuration in `postgres/pgconfig/01custom.conf` sets `listen_addresses = '*'`
+  - DO NOT override with `listen_addresses=localhost` during startup in Docker Swarm environments
+  - Repmgr uses hostname-based connections (e.g., `host=pg01`) which require network listening
 
 ### Pgpool Configuration
 - **Backend Node List**: Defines all PostgreSQL nodes
@@ -383,10 +388,34 @@ When generating code for this project:
    - Minimize layer count
    - Clean up apt cache
    - Use specific versions
+   - For Docker Swarm: ensure services listen on all interfaces, not just localhost
+   - Consider DNS propagation delays in overlay networks
 8. **Security**: 
    - Never commit secrets
    - Use environment variables for passwords
    - Validate inputs
+
+## Recent Fixes (December 2025)
+
+### Docker Swarm Repmgr Registration Fix
+
+**Issue**: Primary PostgreSQL node failed to register with repmgr in Docker Swarm deployments, causing cascade failures in standby initialization and pgpool operation.
+
+**Root Cause**: PostgreSQL was starting with `listen_addresses=localhost` during initialization, preventing repmgr from connecting via the Docker Swarm overlay network hostname.
+
+**Files Modified**: `postgres/initdb.sh`
+- Removed `listen_addresses=localhost` restriction from startup commands
+- Fixed `PG_MASTER_NODE_NAME` to properly read from `PGMASTER` environment variable
+- Added DNS resolution checks for Docker Swarm overlay network compatibility
+- Added explicit return codes to `wait_for_master()` function
+
+**Documentation**: See `DOCKER_SWARM_FIX.md` for comprehensive analysis and `QUICK_FIX_SUMMARY.md` for quick reference.
+
+**Impact**: This fix resolves:
+- Primary registration failures: `connection to server at "pg01" failed: Connection refused`
+- Standby nodes waiting indefinitely for master registration
+- Pgpool unable to identify primary node
+- Repmgrd failing with: `no metadata record found for this node`
 
 ## Troubleshooting Tips
 
@@ -395,12 +424,18 @@ When generating code for this project:
 - **Pgpool connection issues**: Verify `pgpool_status` file and backend node availability
 - **SSH failures**: Check SSH keys and port 222 accessibility
 - **VIP not assigned**: Verify watchdog configuration and network interfaces
+- **Repmgr registration failures in Swarm**: See `DOCKER_SWARM_FIX.md` - likely PostgreSQL listening configuration issue
+- **DNS resolution issues**: Docker Swarm overlay networks may have brief DNS propagation delays
 
 ## Additional Resources
 
 - **Main Documentation**: README.md
 - **Deployment Guide**: DEPLOYMENT.md
 - **Quick Start**: QUICKSTART.md
+- **Docker Swarm Fix**: DOCKER_SWARM_FIX.md (comprehensive troubleshooting for Swarm issues)
+- **Quick Fix Summary**: QUICK_FIX_SUMMARY.md (quick reference for common problems)
+- **Repmgr Registration Fix**: REPMGR_REGISTRATION_FIX.md (detailed fix explanation)
+- **SSH Fix Summary**: SSH_FIX_SUMMARY.md (SSH connection improvements)
 - **Pgpool Watchdog**: doc/pgpoolwatchdog.md
 - **Failover Details**: failover.md
 - **Repmgr Auto-Failover**: doc/repmgr_auto.md (deprecated approach)
