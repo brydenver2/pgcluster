@@ -775,4 +775,17 @@ rm -f /var/run/pgpool/pgpool.pid /var/run/pgpool/.s.PGSQL.9999 /var/run/pgpool/.
 log_info "inject env variables into config file"
 injectConfigsFromEnv
 log_info "Start pgpool in foreground"
-exec /usr/bin/pgpool -f ${CONFIG_FILE} -n
+# Try different possible pgpool binary locations
+if [ -x /usr/sbin/pgpool2 ]; then
+  exec /usr/sbin/pgpool2 -f ${CONFIG_FILE} -n
+elif [ -x /usr/bin/pgpool2 ]; then
+  exec /usr/bin/pgpool2 -f ${CONFIG_FILE} -n
+elif [ -x /usr/sbin/pgpool ]; then
+  exec /usr/sbin/pgpool -f ${CONFIG_FILE} -n
+elif [ -x /usr/bin/pgpool ]; then
+  exec /usr/bin/pgpool -f ${CONFIG_FILE} -n
+else
+  echo "ERROR: pgpool binary not found in /usr/sbin or /usr/bin"
+  ls -la /usr/sbin/pgpool* /usr/bin/pgpool* 2>/dev/null || echo "No pgpool binaries found"
+  exit 1
+fi

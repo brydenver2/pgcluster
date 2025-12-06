@@ -1,93 +1,111 @@
-2025-12-06 21:02:28,384 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
-2025-12-06 21:02:28,389 INFO RPC interface 'supervisor' initialized
-2025-12-06 21:02:28,389 CRIT Server 'unix_http_server' running without any HTTP authentication checking
-2025-12-06 21:02:28,389 INFO supervisord started with pid 1
-2025-12-06 21:02:29,393 INFO spawned: 'repmgr' with pid 7
-2025-12-06 21:02:29,395 INFO spawned: 'postgres' with pid 8
-2025-12-06 21:02:29,397 INFO spawned: 'sshd' with pid 9
+2025-12-06 21:28:33,222 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-12-06 21:28:33,225 INFO RPC interface 'supervisor' initialized
+2025-12-06 21:28:33,225 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2025-12-06 21:28:33,225 INFO supervisord started with pid 1
+2025-12-06 21:28:34,229 INFO spawned: 'repmgr' with pid 7
+2025-12-06 21:28:34,231 INFO spawned: 'postgres' with pid 8
+2025-12-06 21:28:34,234 INFO spawned: 'sshd' with pid 9
 sleep 60 before starting repmgrd
-2025-12-06 21:02:29,399 INFO success: postgres entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
+2025-12-06 21:28:34,236 INFO success: postgres entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
 id is : postgres
-2025-12-06 21:02:29.1765054949 - INFO - Start initdb on host pg01
-2025-12-06 21:02:29.1765054949 - INFO - MSLIST: myservice
-2025-12-06 21:02:29.1765054949 - INFO - MSOWNERPWDLIST: myservice_owner
-2025-12-06 21:02:29.1765054949 - INFO - MSUSERPWDLIST: myservice_user
-2025-12-06 21:02:29.1765054949 - INFO - PGDATA: /data
-2025-12-06 21:02:29.1765054949 - INFO - INITIAL_NODE_TYPE: master
-2025-12-06 21:02:29.1765054949 - INFO - NODE_ID: 1
-2025-12-06 21:02:29.1765054949 - INFO - NODE_NAME: pg01
-2025-12-06 21:02:29.1765054949 - INFO - ARCHIVELOG: 1
-2025-12-06 21:02:29.1765054949 - INFO - PG_MASTER_NODE_NAME: pg01
-2025-12-06 21:02:29.1765054949 - INFO - docker: yes
-2025-12-06 21:02:29.1765054949 - INFO - REPMGRD_FAILOVER_MODE: manual
-2025-12-06 21:02:29.1765054949 - INFO - repmgr password set via env
-2025-12-06 21:02:29.1765054949 - INFO - setup .pgpass for replication and for repmgr
-2025-12-06 21:02:29.1765054949 - INFO - File /data/postgresql.conf already exist
-2025-12-06 21:02:29.1765054949 - INFO - Checking if repmgr database and extension need to be set up
-waiting for server to start....2025-12-06 21:02:29.563 UTC [40] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
-2025-12-06 21:02:29.563 UTC [40] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-2025-12-06 21:02:29.563 UTC [40] LOG:  listening on IPv6 address "::", port 5432
-2025-12-06 21:02:29.586 UTC [40] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2025-12-06 21:02:29.603 UTC [43] LOG:  database system was shut down at 2025-12-06 20:45:18 UTC
-2025-12-06 21:02:29.693 UTC [40] LOG:  database system is ready to accept connections
+2025-12-06 21:28:34.1765056514 - INFO - Start initdb on host pg01
+2025-12-06 21:28:34.1765056514 - INFO - MSLIST: myservice
+2025-12-06 21:28:34.1765056514 - INFO - MSOWNERPWDLIST: myservice_owner
+2025-12-06 21:28:34.1765056514 - INFO - MSUSERPWDLIST: myservice_user
+2025-12-06 21:28:34.1765056514 - INFO - PGDATA: /data
+2025-12-06 21:28:34.1765056514 - INFO - INITIAL_NODE_TYPE: master
+2025-12-06 21:28:34.1765056514 - INFO - NODE_ID: 1
+2025-12-06 21:28:34.1765056514 - INFO - NODE_NAME: pg01
+2025-12-06 21:28:34.1765056514 - INFO - ARCHIVELOG: 1
+2025-12-06 21:28:34.1765056514 - INFO - PG_MASTER_NODE_NAME: pg01
+2025-12-06 21:28:34.1765056514 - INFO - docker: yes
+2025-12-06 21:28:34.1765056514 - INFO - REPMGRD_FAILOVER_MODE: manual
+2025-12-06 21:28:34.1765056514 - INFO - repmgr password set via env
+2025-12-06 21:28:34.1765056514 - INFO - setup .pgpass for replication and for repmgr
+2025-12-06 21:28:34.1765056514 - INFO - File /data/postgresql.conf already exist
+2025-12-06 21:28:34.1765056514 - INFO - Checking if repmgr database and extension need to be set up
+waiting for server to start....2025-12-06 21:28:34.620 UTC [40] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+2025-12-06 21:28:34.620 UTC [40] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2025-12-06 21:28:34.620 UTC [40] LOG:  listening on IPv6 address "::", port 5432
+2025-12-06 21:28:34.631 UTC [40] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-12-06 21:28:34.643 UTC [43] LOG:  database system was shut down at 2025-12-06 21:11:27 UTC
+2025-12-06 21:28:34.658 UTC [40] LOG:  database system is ready to accept connections
  done
 server started
-2025-12-06 21:02:29.1765054949 - INFO - repmgr user already exists
-2025-12-06 21:02:29.1765054949 - INFO - repmgr database already exists
-2025-12-06 21:02:29.1765054949 - INFO - repmgr extension already installed
-2025-12-06 21:02:29.1765054949 - INFO - Checking if node is registered in repmgr metadata
-2025-12-06 21:02:29.1765054949 - INFO - Node already registered in repmgr metadata
-2025-12-06 21:02:29.975 UTC [40] LOG:  received fast shutdown request
-waiting for server to shut down....2025-12-06 21:02:29.982 UTC [40] LOG:  aborting any active transactions
-2025-12-06 21:02:29.985 UTC [40] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
-2025-12-06 21:02:29.985 UTC [41] LOG:  shutting down
-2025-12-06 21:02:29.991 UTC [67] FATAL:  the database system is shutting down
-2025-12-06 21:02:30.006 UTC [68] FATAL:  the database system is shutting down
-archiving pg_wal/00000001000000000000001F
-2025-12-06 21:02:30.025 UTC [41] LOG:  checkpoint starting: shutdown immediate
-2025-12-06 21:02:30.119 UTC [73] FATAL:  the database system is shutting down
-2025-12-06 21:02:30.145 UTC [41] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.023 s, sync=0.013 s, total=0.128 s; sync files=2, longest=0.007 s, average=0.007 s; distance=16384 kB, estimate=16384 kB; lsn=0/20000028, redo lsn=0/20000028
-2025-12-06 21:02:30.216 UTC [40] LOG:  database system is shut down
+2025-12-06 21:28:34.1765056514 - INFO - repmgr user already exists
+2025-12-06 21:28:34.1765056514 - INFO - repmgr database already exists
+2025-12-06 21:28:34.1765056514 - INFO - repmgr extension already installed
+2025-12-06 21:28:34.1765056514 - INFO - Checking if node is registered in repmgr metadata
+2025-12-06 21:28:34.1765056514 - INFO - Node already registered in repmgr metadata
+2025-12-06 21:28:34.866 UTC [40] LOG:  received fast shutdown request
+waiting for server to shut down....2025-12-06 21:28:34.872 UTC [40] LOG:  aborting any active transactions
+2025-12-06 21:28:34.874 UTC [40] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
+2025-12-06 21:28:34.875 UTC [41] LOG:  shutting down
+archiving pg_wal/000000010000000000000021
+2025-12-06 21:28:34.902 UTC [41] LOG:  checkpoint starting: shutdown immediate
+2025-12-06 21:28:34.933 UTC [41] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.009 s, sync=0.003 s, total=0.035 s; sync files=2, longest=0.002 s, average=0.002 s; distance=16384 kB, estimate=16384 kB; lsn=0/22000028, redo lsn=0/22000028
+2025-12-06 21:28:34.940 UTC [40] LOG:  database system is shut down
  done
 server stopped
-2025-12-06 21:02:30,276 INFO reaped unknown pid 40 (exit status 0)
+2025-12-06 21:28:34,967 INFO reaped unknown pid 40 (exit status 0)
 UID          PID    PPID  C STIME TTY          TIME CMD
-root           1       0 10 21:02 ?        00:00:00 /usr/bin/python3 /usr/bin/supervisord --configuration=/etc/supervisor/supervisord.conf
-postgres       7       1  0 21:02 ?        00:00:00 /bin/bash /scripts/start_repmgr.sh
-postgres       8       1  2 21:02 ?        00:00:00 /bin/bash /scripts/initdb.sh
-root           9       1  0 21:02 ?        00:00:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
-postgres      10       7  0 21:02 ?        00:00:00 sleep 60
-postgres      74       8  0 21:02 ?        00:00:00 ps -ef
-2025-12-06 21:02:30.1765054950 - INFO - start postgres in foreground
-2025-12-06 21:02:30.338 UTC [8] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
-2025-12-06 21:02:30.339 UTC [8] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-2025-12-06 21:02:30.339 UTC [8] LOG:  listening on IPv6 address "::", port 5432
-2025-12-06 21:02:30.351 UTC [8] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2025-12-06 21:02:30.369 UTC [78] LOG:  database system was shut down at 2025-12-06 21:02:30 UTC
-2025-12-06 21:02:30.390 UTC [8] LOG:  database system is ready to accept connections
-2025-12-06 21:02:31,391 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-2025-12-06 21:02:31,391 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-2025-12-06 21:02:38,399 INFO reaped unknown pid 92 (exit status 255)
-2025-12-06 21:02:39,401 INFO reaped unknown pid 101 (exit status 255)
-[2025-12-06 21:03:29] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
-[2025-12-06 21:03:29] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
-[2025-12-06 21:03:29] [INFO] connecting to database "host=pg01 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
+root           1       0  9 21:28 ?        00:00:00 /usr/bin/python3 /usr/bin/supervisord --configuration=/etc/supervisor/supervisord.conf
+postgres       7       1  0 21:28 ?        00:00:00 /bin/bash /scripts/start_repmgr.sh
+postgres       8       1  1 21:28 ?        00:00:00 /bin/bash /scripts/initdb.sh
+root           9       1  1 21:28 ?        00:00:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+postgres      10       7  0 21:28 ?        00:00:00 sleep 60
+postgres      70       8  0 21:28 ?        00:00:00 ps -ef
+2025-12-06 21:28:34.1765056514 - INFO - start postgres in foreground
+2025-12-06 21:28:35.013 UTC [8] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+2025-12-06 21:28:35.013 UTC [8] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2025-12-06 21:28:35.013 UTC [8] LOG:  listening on IPv6 address "::", port 5432
+2025-12-06 21:28:35.021 UTC [8] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-12-06 21:28:35.031 UTC [74] LOG:  database system was shut down at 2025-12-06 21:28:34 UTC
+2025-12-06 21:28:35.043 UTC [8] LOG:  database system is ready to accept connections
+2025-12-06 21:28:36,044 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-06 21:28:36,044 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-06 21:28:42,051 INFO reaped unknown pid 98 (exit status 255)
+2025-12-06 21:28:43,053 INFO reaped unknown pid 107 (exit status 255)
+Node 1 already registered in repmgr metadata
+[2025-12-06 21:29:34] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-06 21:29:34] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-06 21:29:34] [INFO] connecting to database "host=pg01 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
 INFO:  set_repmgrd_pid(): provided pidfile is /tmp/repmgrd.pid
-[2025-12-06 21:03:29] [NOTICE] starting monitoring of node "pg01" (ID: 1)
-[2025-12-06 21:03:29] [INFO] "connection_check_type" set to "ping"
-[2025-12-06 21:03:29] [INFO] executing notification command for event "repmgrd_start"
-[2025-12-06 21:03:29] [DETAIL] command is:
-  /scripts/repmgrd_event.sh 1 "repmgrd_start" 1 "2025-12-06 21:03:29.429843+00" "monitoring cluster primary \"pg01\" (ID: 1)"   
-[2025-12-06 21:03:29] [NOTICE] monitoring cluster primary "pg01" (ID: 1)
-[2025-12-06 21:03:29] [INFO] child node "pg02" (ID: 2) is attached
-2025-12-06 21:07:30.370 UTC [76] LOG:  checkpoint starting: time
-2025-12-06 21:07:31.421 UTC [76] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 2 recycled; write=1.011 s, sync=0.007 s, total=1.052 s; sync files=9, longest=0.005 s, average=0.001 s; distance=53 kB, estimate=53 kB; lsn=0/2000ED70, redo lsn=0/2000D4B8
-2025-12-06 21:07:41,433 INFO reaped unknown pid 278 (exit status 255)
-2025-12-06 21:07:41,433 INFO reaped unknown pid 288 (exit status 255)
-2025-12-06 21:07:42.959 UTC [302] ERROR:  role "hcuser" already exists
-2025-12-06 21:07:42.959 UTC [302] STATEMENT:  create user hcuser with login password 'hcuser';
-2025-12-06 21:07:43,961 INFO reaped unknown pid 299 (exit status 255)
-2025-12-06 21:07:43,961 INFO reaped unknown pid 309 (exit status 255)
-2025-12-06 21:07:54,973 INFO reaped unknown pid 324 (exit status 255)
-2025-12-06 21:07:54,973 INFO reaped unknown pid 333 (exit status 255)
-[2025-12-06 21:08:30] [INFO] monitoring primary node "pg01" (ID: 1) in normal state
+[2025-12-06 21:29:34] [NOTICE] starting monitoring of node "pg01" (ID: 1)
+[2025-12-06 21:29:34] [INFO] "connection_check_type" set to "ping"
+[2025-12-06 21:29:34] [INFO] executing notification command for event "repmgrd_start"
+[2025-12-06 21:29:34] [DETAIL] command is:
+  /scripts/repmgrd_event.sh 1 "repmgrd_start" 1 "2025-12-06 21:29:34.310443+00" "monitoring cluster primary \"pg01\" (ID: 1)"   
+[2025-12-06 21:29:34] [NOTICE] monitoring cluster primary "pg01" (ID: 1)
+[2025-12-06 21:29:34] [INFO] child node "pg02" (ID: 2) is attached
+[2025-12-06 21:29:34] [INFO] child node "pg03" (ID: 3) is attached
+2025-12-06 21:29:53,362 INFO reaped unknown pid 239 (exit status 255)
+2025-12-06 21:29:54,364 INFO reaped unknown pid 248 (exit status 255)
+2025-12-06 21:29:55.192 UTC [264] ERROR:  role "hcuser" already exists
+2025-12-06 21:29:55.192 UTC [264] STATEMENT:  create user hcuser with login password 'hcuser';
+2025-12-06 21:29:56,193 INFO reaped unknown pid 261 (exit status 255)
+2025-12-06 21:29:56,194 INFO reaped unknown pid 271 (exit status 255)
+2025-12-06 21:30:07,205 INFO reaped unknown pid 300 (exit status 255)
+2025-12-06 21:30:07,205 INFO reaped unknown pid 309 (exit status 255)
+2025-12-06 21:30:08,207 INFO reaped unknown pid 321 (exit status 255)
+2025-12-06 21:30:08,207 INFO reaped unknown pid 330 (exit status 255)
+2025-12-06 21:30:09.737 UTC [358] ERROR:  role "hcuser" already exists
+2025-12-06 21:30:09.737 UTC [358] STATEMENT:  create user hcuser with login password 'hcuser';
+2025-12-06 21:30:10,739 INFO reaped unknown pid 355 (exit status 255)
+2025-12-06 21:30:10,739 INFO reaped unknown pid 365 (exit status 255)
+2025-12-06 21:30:21,752 INFO reaped unknown pid 393 (exit status 255)
+2025-12-06 21:30:21,752 INFO reaped unknown pid 402 (exit status 255)
+2025-12-06 21:30:22,753 INFO reaped unknown pid 414 (exit status 255)
+2025-12-06 21:30:22,754 INFO reaped unknown pid 423 (exit status 255)
+2025-12-06 21:30:24.242 UTC [438] ERROR:  role "hcuser" already exists
+2025-12-06 21:30:24.242 UTC [438] STATEMENT:  create user hcuser with login password 'hcuser';
+2025-12-06 21:30:25,243 INFO reaped unknown pid 435 (exit status 255)
+2025-12-06 21:30:25,243 INFO reaped unknown pid 447 (exit status 255)
+2025-12-06 21:30:36,256 INFO reaped unknown pid 476 (exit status 255)
+2025-12-06 21:30:36,256 INFO reaped unknown pid 485 (exit status 255)
+2025-12-06 21:30:37,258 INFO reaped unknown pid 497 (exit status 255)
+2025-12-06 21:30:37,258 INFO reaped unknown pid 506 (exit status 255)
+2025-12-06 21:30:38.687 UTC [521] ERROR:  role "hcuser" already exists
+2025-12-06 21:30:38.687 UTC [521] STATEMENT:  create user hcuser with login password 'hcuser';
+2025-12-06 21:30:39,689 INFO reaped unknown pid 518 (exit status 255)
+2025-12-06 21:30:39,689 INFO reaped unknown pid 528 (exit status 255)
