@@ -364,10 +364,33 @@ EOF
         log_info "WARNING: Failed to register node as primary"
       fi
     else
-      log_info "This node is a standby, registering as standby"
-      repmgr -f /etc/repmgr/${PGVER}/repmgr.conf -v standby register --force
-      if [ $? -ne 0 ] ; then
-        log_info "WARNING: Failed to register node as standby"
+      log_info "This node is a standby, checking if primary is accessible before registering"
+      # Wait a bit for the primary to be ready (max 30 seconds)
+      PRIMARY_READY=0
+      for i in 1 2 3 4 5 6; do
+        log_info "Checking connectivity to primary ${PG_MASTER_NODE_NAME} (attempt $i/6)"
+        psql -h ${PG_MASTER_NODE_NAME} -U repmgr -d repmgr -tAc "SELECT 1" > /dev/null 2>&1
+        if [ $? -eq 0 ] ; then
+          log_info "Primary ${PG_MASTER_NODE_NAME} is accessible"
+          PRIMARY_READY=1
+          break
+        else
+          log_info "Primary not ready yet, waiting 5 seconds..."
+          sleep 5
+        fi
+      done
+      
+      if [ $PRIMARY_READY -eq 1 ] ; then
+        log_info "Registering standby with repmgr"
+        repmgr -f /etc/repmgr/${PGVER}/repmgr.conf -v standby register --force
+        if [ $? -ne 0 ] ; then
+          log_info "WARNING: Failed to register node as standby"
+        else
+          log_info "Standby registration successful"
+        fi
+      else
+        log_info "WARNING: Primary not accessible after 30 seconds, skipping registration"
+        log_info "Node will attempt to register when repmgrd starts"
       fi
     fi
   else
