@@ -369,17 +369,20 @@ EOF
       PRIMARY_READY=0
       for i in 1 2 3 4 5 6; do
         log_info "Checking connectivity to primary ${PG_MASTER_NODE_NAME} (attempt $i/6)"
-        PGCONNECT_TIMEOUT=2 psql -h ${PG_MASTER_NODE_NAME} -U repmgr -d repmgr -tAc "SELECT 1" > /dev/null 2>&1
+        # Use timeout command to force kill psql if it hangs
+        timeout 3 psql -h ${PG_MASTER_NODE_NAME} -U repmgr -d repmgr -tAc "SELECT 1" > /tmp/psql_test.out 2>&1
         RESULT=$?
         log_info "Connection attempt result: $RESULT"
         if [ $RESULT -eq 0 ] ; then
           log_info "Primary ${PG_MASTER_NODE_NAME} is accessible"
           PRIMARY_READY=1
           break
+        elif [ $RESULT -eq 124 ] ; then
+          log_info "Connection attempt timed out after 3 seconds"
         else
-          log_info "Primary not ready yet, waiting 5 seconds..."
-          sleep 5
+          log_info "Primary not ready yet (error code $RESULT), waiting 5 seconds..."
         fi
+        sleep 5
       done
       
       if [ $PRIMARY_READY -eq 1 ] ; then
