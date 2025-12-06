@@ -1,81 +1,58 @@
-2025-12-06 18:46:14,177 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
-2025-12-06 18:46:14,182 INFO RPC interface 'supervisor' initialized
-2025-12-06 18:46:14,182 CRIT Server 'unix_http_server' running without any HTTP authentication checking
-2025-12-06 18:46:14,183 INFO supervisord started with pid 1
-2025-12-06 18:46:15,186 INFO spawned: 'repmgr' with pid 7
-2025-12-06 18:46:15,188 INFO spawned: 'postgres' with pid 8
-2025-12-06 18:46:15,191 INFO spawned: 'sshd' with pid 9
+2025-12-06 19:41:13,146 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-12-06 19:41:13,151 INFO RPC interface 'supervisor' initialized
+2025-12-06 19:41:13,151 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2025-12-06 19:41:13,152 INFO supervisord started with pid 1
+2025-12-06 19:41:14,155 INFO spawned: 'repmgr' with pid 7
+2025-12-06 19:41:14,157 INFO spawned: 'postgres' with pid 8
+2025-12-06 19:41:14,159 INFO spawned: 'sshd' with pid 9
 sleep 60 before starting repmgrd
-2025-12-06 18:46:15,196 INFO success: postgres entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
+2025-12-06 19:41:14,163 INFO success: postgres entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
 id is : postgres
-2025-12-06 18:46:15.1765046775 - INFO - Start initdb on host pg02
-2025-12-06 18:46:15.1765046775 - INFO - MSLIST: myservice
-2025-12-06 18:46:15.1765046775 - INFO - MSOWNERPWDLIST: myservice_owner
-2025-12-06 18:46:15.1765046775 - INFO - MSUSERPWDLIST: myservice_user
-2025-12-06 18:46:15.1765046775 - INFO - PGDATA: /data
-2025-12-06 18:46:15.1765046775 - INFO - INITIAL_NODE_TYPE: slave
-2025-12-06 18:46:15.1765046775 - INFO - NODE_ID: 2
-2025-12-06 18:46:15.1765046775 - INFO - NODE_NAME: pg02
-2025-12-06 18:46:15.1765046775 - INFO - ARCHIVELOG: 1
-2025-12-06 18:46:15.1765046775 - INFO - docker: yes
-2025-12-06 18:46:15.1765046775 - INFO - REPMGRD_FAILOVER_MODE: manual
-2025-12-06 18:46:15.1765046775 - INFO - repmgr password set via env
-2025-12-06 18:46:15.1765046775 - INFO - setup .pgpass for replication and for repmgr
-2025-12-06 18:46:15.1765046775 - INFO - /data/postgresql.conf does not exist
-2025-12-06 18:46:15.1765046775 - INFO - This is a slave. Wait that master is up and running
-2025-12-06 18:46:15.1765046775 - INFO - waiting for master on pg01 to be ready
-2025-12-06 18:46:16,291 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-2025-12-06 18:46:16,291 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-06 19:41:14.1765050074 - INFO - Start initdb on host pg02
+2025-12-06 19:41:14.1765050074 - INFO - MSLIST: myservice
+2025-12-06 19:41:14.1765050074 - INFO - MSOWNERPWDLIST: myservice_owner
+2025-12-06 19:41:14.1765050074 - INFO - MSUSERPWDLIST: myservice_user
+2025-12-06 19:41:14.1765050074 - INFO - PGDATA: /data
+2025-12-06 19:41:14.1765050074 - INFO - INITIAL_NODE_TYPE: slave
+2025-12-06 19:41:14.1765050074 - INFO - NODE_ID: 2
+2025-12-06 19:41:14.1765050074 - INFO - NODE_NAME: pg02
+2025-12-06 19:41:14.1765050074 - INFO - ARCHIVELOG: 1
+2025-12-06 19:41:14.1765050074 - INFO - PG_MASTER_NODE_NAME: pg01
+2025-12-06 19:41:14.1765050074 - INFO - docker: yes
+2025-12-06 19:41:14.1765050074 - INFO - REPMGRD_FAILOVER_MODE: manual
+2025-12-06 19:41:14.1765050074 - INFO - repmgr password set via env
+2025-12-06 19:41:14.1765050074 - INFO - setup .pgpass for replication and for repmgr
+2025-12-06 19:41:14.1765050074 - INFO - /data/postgresql.conf does not exist
+2025-12-06 19:41:14.1765050074 - INFO - This is a slave. Wait that master is up and running
+2025-12-06 19:41:14.1765050074 - INFO - waiting for master on pg01 to be ready
+2025-12-06 19:41:14.1765050074 - INFO - Checking DNS resolution for pg01
+2025-12-06 19:41:14.1765050074 - INFO - DNS resolution for pg01 successful: 10.0.4.3 pg01 10.0.4.2 pg01
+2025-12-06 19:41:15,248 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-06 19:41:15,248 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
 waiting for repmgr node to be initialized with the master
-Password for user repmgr: [2025-12-06 18:47:15] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
-[2025-12-06 18:47:15] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
-[2025-12-06 18:47:15] [INFO] connecting to database "host=pg02 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
-[2025-12-06 18:47:15] [ERROR] connection to database failed
-[2025-12-06 18:47:15] [DETAIL] 
-connection to server at "pg02" (10.0.4.11), port 5432 failed: Connection refused
+Password for user repmgr: [2025-12-06 19:42:14] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-06 19:42:14] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-06 19:42:14] [INFO] connecting to database "host=pg02 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
+[2025-12-06 19:42:14] [ERROR] connection to database failed
+[2025-12-06 19:42:14] [DETAIL] 
+connection to server at "pg02" (10.0.4.6), port 5432 failed: Connection refused
 	Is the server running on that host and accepting TCP/IP connections?
-[2025-12-06 18:47:15] [DETAIL] attempted to connect using:
+[2025-12-06 19:42:14] [DETAIL] attempted to connect using:
   user=repmgr password=rep123 connect_timeout=2 dbname=repmgr host=pg02 fallback_application_name=repmgr options=-csearch_path=
-2025-12-06 18:47:15,209 WARN exited: repmgr (exit status 6; not expected)
-2025-12-06 18:47:16,212 INFO spawned: 'repmgr' with pid 39
+2025-12-06 19:42:14,171 WARN exited: repmgr (exit status 6; not expected)
+2025-12-06 19:42:15,176 INFO spawned: 'repmgr' with pid 44
 sleep 60 before starting repmgrd
-2025-12-06 18:47:17,218 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-[2025-12-06 18:48:16] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
-[2025-12-06 18:48:16] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
-[2025-12-06 18:48:16] [INFO] connecting to database "host=pg02 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
-[2025-12-06 18:48:16] [ERROR] connection to database failed
-[2025-12-06 18:48:16] [DETAIL] 
-connection to server at "pg02" (10.0.4.11), port 5432 failed: Connection refused
+2025-12-06 19:42:16,184 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+[2025-12-06 19:43:15] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-06 19:43:15] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-06 19:43:15] [INFO] connecting to database "host=pg02 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
+[2025-12-06 19:43:15] [ERROR] connection to database failed
+[2025-12-06 19:43:15] [DETAIL] 
+connection to server at "pg02" (10.0.4.6), port 5432 failed: Connection refused
 	Is the server running on that host and accepting TCP/IP connections?
-[2025-12-06 18:48:16] [DETAIL] attempted to connect using:
+[2025-12-06 19:43:15] [DETAIL] attempted to connect using:
   user=repmgr password=rep123 connect_timeout=2 dbname=repmgr host=pg02 fallback_application_name=repmgr options=-csearch_path=
-2025-12-06 18:48:16,227 WARN exited: repmgr (exit status 6; not expected)
-2025-12-06 18:48:17,231 INFO spawned: 'repmgr' with pid 41
+2025-12-06 19:43:15,192 WARN exited: repmgr (exit status 6; not expected)
+2025-12-06 19:43:16,195 INFO spawned: 'repmgr' with pid 46
 sleep 60 before starting repmgrd
-2025-12-06 18:48:18,238 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-[2025-12-06 18:49:17] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
-[2025-12-06 18:49:17] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
-[2025-12-06 18:49:17] [INFO] connecting to database "host=pg02 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
-[2025-12-06 18:49:17] [ERROR] connection to database failed
-[2025-12-06 18:49:17] [DETAIL] 
-connection to server at "pg02" (10.0.4.11), port 5432 failed: Connection refused
-	Is the server running on that host and accepting TCP/IP connections?
-[2025-12-06 18:49:17] [DETAIL] attempted to connect using:
-  user=repmgr password=rep123 connect_timeout=2 dbname=repmgr host=pg02 fallback_application_name=repmgr options=-csearch_path=
-2025-12-06 18:49:17,248 WARN exited: repmgr (exit status 6; not expected)
-2025-12-06 18:49:18,251 INFO spawned: 'repmgr' with pid 43
-sleep 60 before starting repmgrd
-2025-12-06 18:49:19,258 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-[2025-12-06 18:50:18] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
-[2025-12-06 18:50:18] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
-[2025-12-06 18:50:18] [INFO] connecting to database "host=pg02 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
-[2025-12-06 18:50:18] [ERROR] connection to database failed
-[2025-12-06 18:50:18] [DETAIL] 
-connection to server at "pg02" (10.0.4.11), port 5432 failed: Connection refused
-	Is the server running on that host and accepting TCP/IP connections?
-[2025-12-06 18:50:18] [DETAIL] attempted to connect using:
-  user=repmgr password=rep123 connect_timeout=2 dbname=repmgr host=pg02 fallback_application_name=repmgr options=-csearch_path=
-2025-12-06 18:50:18,266 WARN exited: repmgr (exit status 6; not expected)
-2025-12-06 18:50:18,268 INFO spawned: 'repmgr' with pid 45
-sleep 60 before starting repmgrd
-2025-12-06 18:50:19,277 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-06 19:43:17,202 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

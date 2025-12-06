@@ -96,18 +96,37 @@ wait_for_master(){
    log_info "DNS resolution for ${HOST} successful: $(getent hosts ${HOST})"
  fi
  
+ # Verify .pgpass is readable
+ if [ ! -f /home/postgres/.pgpass ] ; then
+   log_info "ERROR: /home/postgres/.pgpass does not exist!"
+ else
+   log_info ".pgpass file exists with permissions: $(ls -la /home/postgres/.pgpass)"
+ fi
+ 
+ # Ensure PGPASSFILE is set
+ export PGPASSFILE=/home/postgres/.pgpass
+ 
  nbrlines=0
  while [ $nbrlines -lt 1 -a $NBRTRY -gt 0 ] ; do
-  sleep $SLEEP_TIME
-  echo "waiting for repmgr node to be initialized with the master"
-  psql -U repmgr -h ${HOST} repmgr -t -c "select node_name,active from nodes;" > /tmp/nodes
-  if [ $? -ne 0 ] ; then
-    echo "cannot connect to $HOST in psql.."
+  echo "waiting for repmgr node to be initialized with the master (attempt $((25-NBRTRY))/24)"
+  psql -U repmgr -h ${HOST} repmgr -t -c "select node_name,active from nodes;" > /tmp/nodes 2>&1
+  psql_ret=$?
+  if [ $psql_ret -ne 0 ] ; then
+    log_info "cannot connect to $HOST in psql (exit code: $psql_ret)"
+    cat /tmp/nodes
     nbrlines=0
   else
     nbrlines=$( grep -v "^$" /tmp/nodes | wc -l )
+    log_info "Successfully queried repmgr.nodes, found $nbrlines nodes"
+    if [ $nbrlines -gt 0 ] ; then
+      log_info "Node list:"
+      cat /tmp/nodes
+    fi
   fi
   NBRTRY=$((NBRTRY-1))
+  if [ $nbrlines -lt 1 ] ; then
+    sleep $SLEEP_TIME
+  fi
  done
  
  # Return success if we found at least one node, failure otherwise
