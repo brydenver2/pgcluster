@@ -369,8 +369,10 @@ EOF
       PRIMARY_READY=0
       for i in 1 2 3 4 5 6; do
         log_info "Checking connectivity to primary ${PG_MASTER_NODE_NAME} (attempt $i/6)"
-        psql -h ${PG_MASTER_NODE_NAME} -U repmgr -d repmgr -tAc "SELECT 1" > /dev/null 2>&1
-        if [ $? -eq 0 ] ; then
+        PGCONNECT_TIMEOUT=2 psql -h ${PG_MASTER_NODE_NAME} -U repmgr -d repmgr -tAc "SELECT 1" > /dev/null 2>&1
+        RESULT=$?
+        log_info "Connection attempt result: $RESULT"
+        if [ $RESULT -eq 0 ] ; then
           log_info "Primary ${PG_MASTER_NODE_NAME} is accessible"
           PRIMARY_READY=1
           break
