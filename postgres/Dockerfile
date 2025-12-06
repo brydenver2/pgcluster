@@ -1,5 +1,4 @@
 FROM debian:12
-MAINTAINER ptim007@yahoo.com
 ENV MAJORVER=17
 ENV MINORVER=5
 ENV PGVER=17
@@ -27,6 +26,8 @@ RUN apt-get update && apt-get install -y postgresql-${MAJORVER} postgresql-contr
 RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-pgpool2 pgpool2 && apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install repmgr
 RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-repmgr && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install pgvector and anon extensions
+RUN apt-get update && apt-get install -y postgresql-${MAJORVER}-pgvector postgresql-${MAJORVER}-anonymizer && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /var/log/repmgr && chown postgres:postgres /var/log/repmgr
 RUN mkdir -p /etc/repmgr/${PGVER} && chown postgres:postgres /etc/repmgr/${PGVER}
 RUN mkdir -p /data /backup /archive && chown -R postgres:postgres /data /backup /archive && chmod 755 /data /archive
