@@ -212,12 +212,9 @@ services:
     networks:
       - pgcluster_network
     depends_on:
-      pg01:
-        condition: service_started
-      pg02:
-        condition: service_started
-      pg03:
-        condition: service_started
+      - pg01
+      - pg02
+      - pg03
     deploy:
       replicas: 1
       placement:

@@ -614,6 +614,9 @@ trusted_servers = '${TRUSTED_SERVERS}'
                                     # (change requires restart)
 EOF
 fi
+
+# Only add watchdog configuration if watchdog is enabled
+if [ ! -z $DELEGATE_IP ] ; then
 cat <<EOF >> $CONFIG_FILE
 ping_path = '/bin'
                                     # ping command path
@@ -683,6 +686,9 @@ wd_de_escalation_command = ''
                                                                         # (change requires restart)
 EOF
 fi
+# End of watchdog configuration
+fi
+
 echo "heartbeat set-up"
 IFS=',' read -ra HBEATS <<< "$PGP_HEARTBEATS"
 for HBEAT in ${HBEATS[@]}
