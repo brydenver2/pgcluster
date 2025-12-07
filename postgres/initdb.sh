@@ -346,7 +346,11 @@ else
      \q
 EOF
   else
-    log_info "repmgr user already exists"
+    log_info "repmgr user already exists, updating password"
+    psql <<-EOF
+     alter user repmgr with superuser login password '${REPMGRPWD}' ;
+     \q
+EOF
   fi
   
   # Check if repmgr database exists, create if not
