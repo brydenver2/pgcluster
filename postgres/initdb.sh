@@ -189,7 +189,7 @@ create_microservices(){
 #
 # Read repmgr password from file or environment
 if [ ! -z ${REPMGRPWD_FILE} ] && [ -f ${REPMGRPWD_FILE} ] ; then
-  REPMGRPWD=$(cat ${REPMGRPWD_FILE})
+  REPMGRPWD=$(cat ${REPMGRPWD_FILE} | tr -d '\n\r' | xargs)
   log_info "repmgr password loaded from file: ${REPMGRPWD_FILE}"
 elif [ ! -z ${REPMGRPWD} ] ; then
   log_info "repmgr password set via env"
@@ -200,7 +200,7 @@ fi
 
 # Read postgres superuser password from file or environment
 if [ ! -z ${POSTGRES_PASSWORD_FILE} ] && [ -f ${POSTGRES_PASSWORD_FILE} ] ; then
-  PG_SUPERUSER_PWD=$(cat ${POSTGRES_PASSWORD_FILE})
+  PG_SUPERUSER_PWD=$(cat ${POSTGRES_PASSWORD_FILE} | tr -d '\n\r' | xargs)
   log_info "postgres superuser password loaded from file: ${POSTGRES_PASSWORD_FILE}"
 elif [ ! -z ${POSTGRES_PASSWORD} ] ; then
   log_info "postgres superuser password set via POSTGRES_PASSWORD env"

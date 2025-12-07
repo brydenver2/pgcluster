@@ -170,7 +170,7 @@ echo PGP_NODE_NAME=${PGP_NODE_NAME}
 
 # Read REPMGRPWD from file or environment
 if [ ! -z "${REPMGRPWD_FILE}" ] && [ -f "${REPMGRPWD_FILE}" ] ; then
-  REPMGRPWD=$(cat ${REPMGRPWD_FILE})
+  REPMGRPWD=$(cat ${REPMGRPWD_FILE} | tr -d '\n\r' | xargs)
   echo "REPMGRPWD loaded from file: ${REPMGRPWD_FILE}"
 else
   REPMGRPWD=${REPMGRPWD:-rep123}
