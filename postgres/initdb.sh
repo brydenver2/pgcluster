@@ -191,6 +191,9 @@ create_microservices(){
 if [ ! -z ${REPMGRPWD_FILE} ] && [ -f ${REPMGRPWD_FILE} ] ; then
   REPMGRPWD=$(cat ${REPMGRPWD_FILE} | tr -d '\n\r' | xargs)
   log_info "repmgr password loaded from file: ${REPMGRPWD_FILE}"
+  log_info "repmgr password length: ${#REPMGRPWD} characters"
+  # Debug: show first/last chars (not full password for security)
+  log_info "repmgr password debug: starts with '$(echo -n "${REPMGRPWD}" | head -c 3)', ends with '$(echo -n "${REPMGRPWD}" | tail -c 3)'"
 elif [ ! -z ${REPMGRPWD} ] ; then
   log_info "repmgr password set via env"
 else
@@ -347,10 +350,32 @@ else
 EOF
   else
     log_info "repmgr user already exists, updating password"
-    psql <<-EOF
-     alter user repmgr with superuser login password '${REPMGRPWD}' ;
-     \q
-EOF
+    log_info "Updating repmgr password (length: ${#REPMGRPWD})"
+    psql -c "alter user repmgr with superuser login password '${REPMGRPWD}';"
+    if [ $? -eq 0 ] ; then
+      log_info "repmgr password updated successfully"
+    else
+      log_info "ERROR: Failed to update repmgr password"
+    fi
+  fi
+  
+  # Also update postgres superuser password on every restart
+  log_info "Updating postgres superuser password"
+  psql -c "alter user postgres with login password '${PG_SUPERUSER_PWD}';"
+  if [ $? -eq 0 ] ; then
+    log_info "postgres superuser password updated successfully"
+  else
+    log_info "ERROR: Failed to update postgres password"
+  fi
+  
+  # Test local connection with updated password
+  log_info "Testing local repmgr authentication with updated password"
+  psql -h localhost -U repmgr -d repmgr -c "SELECT 1;" > /tmp/auth_test.log 2>&1
+  if [ $? -eq 0 ] ; then
+    log_info "SUCCESS: repmgr authentication test passed"
+  else
+    log_info "ERROR: repmgr authentication test failed:"
+    cat /tmp/auth_test.log | while read line; do log_info "  $line"; done
   fi
   
   # Check if repmgr database exists, create if not
