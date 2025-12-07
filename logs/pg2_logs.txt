@@ -1,101 +1,198 @@
-2025-12-06 21:53:29,354 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
-2025-12-06 21:53:29,358 INFO RPC interface 'supervisor' initialized
-2025-12-06 21:53:29,358 CRIT Server 'unix_http_server' running without any HTTP authentication checking
-2025-12-06 21:53:29,359 INFO supervisord started with pid 1
-2025-12-06 21:53:30,362 INFO spawned: 'repmgr' with pid 7
-2025-12-06 21:53:30,365 INFO spawned: 'postgres' with pid 8
-2025-12-06 21:53:30,367 INFO spawned: 'sshd' with pid 9
+2025-12-07 03:46:11,848 INFO Set uid to user 0 succeeded
+2025-12-07 03:46:11,851 INFO RPC interface 'supervisor' initialized
+2025-12-07 03:46:11,851 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2025-12-07 03:46:11,852 INFO supervisord started with pid 1
+2025-12-07 03:46:12,855 INFO spawned: 'repmgr' with pid 7
+2025-12-07 03:46:12,858 INFO spawned: 'postgres' with pid 8
+2025-12-07 03:46:12,861 INFO spawned: 'sshd' with pid 9
 sleep 60 before starting repmgrd
-2025-12-06 21:53:30,369 INFO success: postgres entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
+2025-12-07 03:46:12,864 INFO success: postgres entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
 id is : postgres
-2025-12-06 21:53:30.1765058010 - INFO - Start initdb on host pg02
-2025-12-06 21:53:30.1765058010 - INFO - MSLIST: myservice
-2025-12-06 21:53:30.1765058010 - INFO - MSOWNERPWDLIST: myservice_owner
-2025-12-06 21:53:30.1765058010 - INFO - MSUSERPWDLIST: myservice_user
-2025-12-06 21:53:30.1765058010 - INFO - PGDATA: /data
-2025-12-06 21:53:30.1765058010 - INFO - INITIAL_NODE_TYPE: slave
-2025-12-06 21:53:30.1765058010 - INFO - NODE_ID: 2
-2025-12-06 21:53:30.1765058010 - INFO - NODE_NAME: pg02
-2025-12-06 21:53:30.1765058010 - INFO - ARCHIVELOG: 1
-2025-12-06 21:53:30.1765058010 - INFO - PG_MASTER_NODE_NAME: pg01
-2025-12-06 21:53:30.1765058010 - INFO - docker: yes
-2025-12-06 21:53:30.1765058010 - INFO - REPMGRD_FAILOVER_MODE: manual
-2025-12-06 21:53:30.1765058010 - INFO - repmgr password set via env
-2025-12-06 21:53:30.1765058010 - INFO - setup .pgpass for replication and for repmgr
-2025-12-06 21:53:30.1765058010 - INFO - File /data/postgresql.conf already exist
-2025-12-06 21:53:30.1765058010 - INFO - Checking if repmgr database and extension need to be set up
-waiting for server to start....2025-12-06 21:53:30.501 UTC [40] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
-2025-12-06 21:53:30.501 UTC [40] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-2025-12-06 21:53:30.501 UTC [40] LOG:  listening on IPv6 address "::", port 5432
-2025-12-06 21:53:30.514 UTC [40] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2025-12-06 21:53:30.526 UTC [43] LOG:  database system was shut down in recovery at 2025-12-06 21:48:28 UTC
+2025-12-07 03:46:12.1765079172 - INFO - Start initdb on host pg02
+2025-12-07 03:46:12.1765079172 - INFO - MSLIST: myservice
+2025-12-07 03:46:12.1765079172 - INFO - MSOWNERPWDLIST: myservice_owner
+2025-12-07 03:46:12.1765079172 - INFO - MSUSERPWDLIST: myservice_user
+2025-12-07 03:46:12.1765079172 - INFO - PGDATA: /data
+2025-12-07 03:46:12.1765079172 - INFO - INITIAL_NODE_TYPE: slave
+2025-12-07 03:46:12.1765079172 - INFO - NODE_ID: 2
+2025-12-07 03:46:12.1765079172 - INFO - NODE_NAME: pg02
+2025-12-07 03:46:12.1765079172 - INFO - ARCHIVELOG: 1
+2025-12-07 03:46:12.1765079172 - INFO - PG_MASTER_NODE_NAME: pg01
+2025-12-07 03:46:12.1765079172 - INFO - docker: yes
+2025-12-07 03:46:12.1765079172 - INFO - REPMGRD_FAILOVER_MODE: manual
+2025-12-07 03:46:12.1765079172 - INFO - repmgr password loaded from file: /run/secrets/repmgr_password
+2025-12-07 03:46:12.1765079172 - INFO - repmgr password length: 14 characters
+2025-12-07 03:46:12.1765079172 - INFO - repmgr password debug: starts with '4eP', ends with 'vaB'
+2025-12-07 03:46:12.1765079172 - INFO - postgres superuser password loaded from file: /run/secrets/postgres_password
+2025-12-07 03:46:12.1765079172 - INFO - setup .pgpass for replication and for repmgr
+2025-12-07 03:46:12.1765079172 - INFO - File /data/postgresql.conf already exist
+2025-12-07 03:46:12.1765079172 - INFO - Checking if repmgr database and extension need to be set up
+waiting for server to start....2025-12-07 03:46:13.025 UTC [59] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+2025-12-07 03:46:13.025 UTC [59] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2025-12-07 03:46:13.026 UTC [59] LOG:  listening on IPv6 address "::", port 5432
+2025-12-07 03:46:13.040 UTC [59] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-12-07 03:46:13.060 UTC [62] LOG:  database system was shut down in recovery at 2025-12-07 03:24:24 UTC
 cp: cannot stat '/archive/00000002.history': No such file or directory
-cp: cannot stat '/archive/000000010000000000000024': No such file or directory
-2025-12-06 21:53:30.531 UTC [43] LOG:  entering standby mode
-2025-12-06 21:53:30.537 UTC [43] LOG:  redo starts at 0/240000A0
-2025-12-06 21:53:30.538 UTC [43] LOG:  consistent recovery state reached at 0/2400E6C8
-2025-12-06 21:53:30.538 UTC [43] LOG:  record with incorrect prev-link 20002E8/4D0EF346 at 0/2400E6C8
-2025-12-06 21:53:30.538 UTC [40] LOG:  database system is ready to accept read-only connections
-2025-12-06 21:53:30.549 UTC [48] FATAL:  could not connect to the primary server: could not translate host name "pg01" to address: Temporary failure in name resolution
-cp: cannot stat '/archive/00000002.history': No such file or directory
-cp: cannot stat '/archive/000000010000000000000024': No such file or directory
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:13.067 UTC [62] LOG:  entering standby mode
+2025-12-07 03:46:13.075 UTC [62] LOG:  redo starts at 0/2A0000D8
+2025-12-07 03:46:13.075 UTC [62] LOG:  consistent recovery state reached at 0/2A0001E0
+2025-12-07 03:46:13.075 UTC [62] LOG:  invalid resource manager ID 117 at 0/2A0001E0
+2025-12-07 03:46:13.075 UTC [59] LOG:  database system is ready to accept read-only connections
  done
 server started
-2025-12-06 21:53:30.562 UTC [53] FATAL:  could not connect to the primary server: could not translate host name "pg01" to address: Temporary failure in name resolution
+2025-12-07 03:46:13.085 UTC [67] FATAL:  could not connect to the primary server: could not translate host name "pg01" to address: Temporary failure in name resolution
 cp: cannot stat '/archive/00000002.history': No such file or directory
-2025-12-06 21:53:30.564 UTC [43] LOG:  waiting for WAL to become available at 0/24002000
-2025-12-06 21:53:30.1765058010 - INFO - repmgr user already exists
-2025-12-06 21:53:30.1765058010 - INFO - repmgr database already exists
-2025-12-06 21:53:30.1765058010 - INFO - repmgr extension already installed
-2025-12-06 21:53:30.1765058010 - INFO - Checking if node is registered in repmgr metadata
-2025-12-06 21:53:30.1765058010 - INFO - Node already registered in repmgr metadata
-2025-12-06 21:53:30.754 UTC [40] LOG:  received fast shutdown request
-waiting for server to shut down....2025-12-06 21:53:30.759 UTC [40] LOG:  aborting any active transactions
-2025-12-06 21:53:30.762 UTC [41] LOG:  shutting down
-2025-12-06 21:53:30.773 UTC [40] LOG:  database system is shut down
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:13.097 UTC [74] FATAL:  could not connect to the primary server: could not translate host name "pg01" to address: Temporary failure in name resolution
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:46:13.100 UTC [62] LOG:  waiting for WAL to become available at 0/2A0001F8
+2025-12-07 03:46:13.1765079173 - INFO - repmgr user already exists, updating password
+2025-12-07 03:46:13.1765079173 - INFO - Updating repmgr password (length: 14)
+2025-12-07 03:46:13.193 UTC [81] ERROR:  cannot execute ALTER ROLE in a read-only transaction
+2025-12-07 03:46:13.193 UTC [81] STATEMENT:  alter user repmgr with superuser login password '4ePLvfurCGSvaB';
+ERROR:  cannot execute ALTER ROLE in a read-only transaction
+2025-12-07 03:46:13.1765079173 - INFO - ERROR: Failed to update repmgr password
+2025-12-07 03:46:13.1765079173 - INFO - Updating postgres superuser password
+2025-12-07 03:46:13.248 UTC [85] ERROR:  cannot execute ALTER ROLE in a read-only transaction
+2025-12-07 03:46:13.248 UTC [85] STATEMENT:  alter user postgres with login password '7jEj4w2mTtfa73';
+ERROR:  cannot execute ALTER ROLE in a read-only transaction
+2025-12-07 03:46:13.1765079173 - INFO - ERROR: Failed to update postgres password
+2025-12-07 03:46:13.1765079173 - INFO - Testing TCP/IP repmgr authentication with updated password
+2025-12-07 03:46:13.1765079173 - INFO - SUCCESS: repmgr TCP/IP authentication test passed
+2025-12-07 03:46:13.1765079173 - INFO - Testing replication connection with updated password
+2025-12-07 03:46:13.1765079173 - INFO - SUCCESS: replication authentication test passed
+2025-12-07 03:46:13.1765079173 - INFO - repmgr database already exists
+2025-12-07 03:46:13.1765079173 - INFO - repmgr extension already installed
+2025-12-07 03:46:13.1765079173 - INFO - Checking if node is registered in repmgr metadata
+2025-12-07 03:46:13.1765079173 - INFO - Node already registered in repmgr metadata
+2025-12-07 03:46:13.516 UTC [59] LOG:  received fast shutdown request
+waiting for server to shut down....2025-12-07 03:46:13.521 UTC [59] LOG:  aborting any active transactions
+2025-12-07 03:46:13.524 UTC [60] LOG:  shutting down
+2025-12-07 03:46:13.536 UTC [59] LOG:  database system is shut down
  done
 server stopped
-2025-12-06 21:53:30,854 INFO reaped unknown pid 40 (exit status 0)
+2025-12-07 03:46:13,616 INFO reaped unknown pid 59 (exit status 0)
 UID          PID    PPID  C STIME TTY          TIME CMD
-root           1       0 12 21:53 ?        00:00:00 /usr/bin/python3 /usr/bin/supervisord --configuration=/etc/supervisor/supervisord.conf
-postgres       7       1  0 21:53 ?        00:00:00 /bin/bash /scripts/start_repmgr.sh
-postgres       8       1  2 21:53 ?        00:00:00 /bin/bash /scripts/initdb.sh
-root           9       1  2 21:53 ?        00:00:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
-postgres      10       7  0 21:53 ?        00:00:00 sleep 60
-postgres      74       8  0 21:53 ?        00:00:00 ps -ef
-2025-12-06 21:53:30.1765058010 - INFO - start postgres in foreground
-2025-12-06 21:53:30.897 UTC [8] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
-2025-12-06 21:53:30.898 UTC [8] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-2025-12-06 21:53:30.898 UTC [8] LOG:  listening on IPv6 address "::", port 5432
-2025-12-06 21:53:30.907 UTC [8] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2025-12-06 21:53:30.916 UTC [78] LOG:  database system was shut down in recovery at 2025-12-06 21:53:30 UTC
+root           1       0  9 03:46 ?        00:00:00 /usr/bin/python3 /usr/bin/supervisord --configuration=/etc/supervisor/supervisord.conf
+postgres       7       1  0 03:46 ?        00:00:00 /bin/bash /scripts/start_repmgr.sh
+postgres       8       1  2 03:46 ?        00:00:00 /bin/bash /scripts/initdb.sh
+root           9       1  0 03:46 ?        00:00:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+postgres      10       7  0 03:46 ?        00:00:00 sleep 60
+postgres     109       8  0 03:46 ?        00:00:00 ps -ef
+2025-12-07 03:46:13.1765079173 - INFO - start postgres in foreground
+2025-12-07 03:46:13.665 UTC [8] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+2025-12-07 03:46:13.665 UTC [8] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2025-12-07 03:46:13.665 UTC [8] LOG:  listening on IPv6 address "::", port 5432
+2025-12-07 03:46:13.677 UTC [8] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-12-07 03:46:13.691 UTC [113] LOG:  database system was shut down in recovery at 2025-12-07 03:46:13 UTC
 cp: cannot stat '/archive/00000002.history': No such file or directory
-cp: cannot stat '/archive/000000010000000000000024': No such file or directory
-2025-12-06 21:53:30.921 UTC [78] LOG:  entering standby mode
-2025-12-06 21:53:30.928 UTC [78] LOG:  redo starts at 0/240000A0
-2025-12-06 21:53:30.928 UTC [78] LOG:  consistent recovery state reached at 0/2400E6C8
-2025-12-06 21:53:30.928 UTC [78] LOG:  record with incorrect prev-link 20002E8/4D0EF346 at 0/2400E6C8
-2025-12-06 21:53:30.929 UTC [8] LOG:  database system is ready to accept read-only connections
-2025-12-06 21:53:30.939 UTC [83] FATAL:  could not connect to the primary server: could not translate host name "pg01" to address: Temporary failure in name resolution
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:13.696 UTC [113] LOG:  entering standby mode
+2025-12-07 03:46:13.702 UTC [113] LOG:  redo starts at 0/2A0000D8
+2025-12-07 03:46:13.702 UTC [113] LOG:  consistent recovery state reached at 0/2A0001E0
+2025-12-07 03:46:13.702 UTC [113] LOG:  invalid resource manager ID 117 at 0/2A0001E0
+2025-12-07 03:46:13.702 UTC [8] LOG:  database system is ready to accept read-only connections
+2025-12-07 03:46:13.715 UTC [118] FATAL:  could not connect to the primary server: could not translate host name "pg01" to address: Temporary failure in name resolution
 cp: cannot stat '/archive/00000002.history': No such file or directory
-cp: cannot stat '/archive/000000010000000000000024': No such file or directory
-2025-12-06 21:53:30.951 UTC [88] FATAL:  could not connect to the primary server: could not translate host name "pg01" to address: Temporary failure in name resolution
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:13.726 UTC [123] FATAL:  could not connect to the primary server: could not translate host name "pg01" to address: Temporary failure in name resolution
 cp: cannot stat '/archive/00000002.history': No such file or directory
-2025-12-06 21:53:30.954 UTC [78] LOG:  waiting for WAL to become available at 0/24002000
-2025-12-06 21:53:31,955 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-2025-12-06 21:53:31,955 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-cp: cannot stat '/archive/000000010000000000000024': No such file or directory
-2025-12-06 21:53:35.975 UTC [101] LOG:  started streaming WAL from primary at 0/24000000 on timeline 1
-2025-12-06 21:53:40,980 INFO reaped unknown pid 108 (exit status 255)
-2025-12-06 21:53:41,981 INFO reaped unknown pid 117 (exit status 255)
+2025-12-07 03:46:13.728 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+2025-12-07 03:46:14,730 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-07 03:46:14,730 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:18.746 UTC [136] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.11), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:46:18.748 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+2025-12-07 03:46:23.292 UTC [158] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:23.292 UTC [158] DETAIL:  Connection matched file "/data/pg_hba.conf" line 133: "host    repmgr        repmgr      0.0.0.0/0      md5"
+2025-12-07 03:46:23,292 INFO reaped unknown pid 145 (exit status 255)
+2025-12-07 03:46:23,292 INFO reaped unknown pid 154 (exit status 255)
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:23.744 UTC [161] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.12), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:46:23.747 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+2025-12-07 03:46:25.138 UTC [164] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:25.138 UTC [164] DETAIL:  Connection matched file "/data/pg_hba.conf" line 133: "host    repmgr        repmgr      0.0.0.0/0      md5"
+2025-12-07 03:46:25.186 UTC [166] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:25.186 UTC [166] DETAIL:  Connection matched file "/data/pg_hba.conf" line 133: "host    repmgr        repmgr      0.0.0.0/0      md5"
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:28.747 UTC [177] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.11), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:46:28.750 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:33.760 UTC [183] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.11), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:46:33.762 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+2025-12-07 03:46:35.244 UTC [187] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:35.244 UTC [187] DETAIL:  Connection matched file "/data/pg_hba.conf" line 133: "host    repmgr        repmgr      0.0.0.0/0      md5"
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:38.755 UTC [198] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.11), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:46:38.757 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:43.751 UTC [204] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.12), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:46:43.753 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+2025-12-07 03:46:45.289 UTC [208] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:45.289 UTC [208] DETAIL:  Connection matched file "/data/pg_hba.conf" line 133: "host    repmgr        repmgr      0.0.0.0/0      md5"
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:48.758 UTC [219] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.11), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:46:48.761 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:53.760 UTC [225] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.11), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:46:53.763 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+2025-12-07 03:46:55.326 UTC [229] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:55.326 UTC [229] DETAIL:  Connection matched file "/data/pg_hba.conf" line 133: "host    repmgr        repmgr      0.0.0.0/0      md5"
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:46:58.762 UTC [240] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.12), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:46:58.764 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:47:03.770 UTC [246] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.12), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:47:03.773 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+2025-12-07 03:47:05.367 UTC [250] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:47:05.367 UTC [250] DETAIL:  Connection matched file "/data/pg_hba.conf" line 133: "host    repmgr        repmgr      0.0.0.0/0      md5"
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:47:08.761 UTC [261] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.12), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:47:08.763 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
 Node 2 already registered in repmgr metadata
-[2025-12-06 21:54:30] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
-[2025-12-06 21:54:30] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
-[2025-12-06 21:54:30] [INFO] connecting to database "host=pg02 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
-INFO:  set_repmgrd_pid(): provided pidfile is /tmp/repmgrd.pid
-[2025-12-06 21:54:30] [NOTICE] starting monitoring of node "pg02" (ID: 2)
-[2025-12-06 21:54:30] [INFO] "connection_check_type" set to "ping"
-[2025-12-06 21:54:30] [INFO] executing notification command for event "repmgrd_start"
-[2025-12-06 21:54:30] [DETAIL] command is:
-  /scripts/repmgrd_event.sh 2 "repmgrd_start" 1 "2025-12-06 21:54:30.457102+00" "monitoring connection to upstream node \"pg01\" (ID: 1)"   
-[2025-12-06 21:54:30] [INFO] monitoring connection to upstream node "pg01" (ID: 1)
+[2025-12-07 03:47:12] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
+[2025-12-07 03:47:12] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
+[2025-12-07 03:47:12] [INFO] connecting to database "host=pg02 dbname=repmgr user=repmgr password=4ePLvfurCGSvaB connect_timeout=2"
+2025-12-07 03:47:12.930 UTC [268] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:47:12.930 UTC [268] DETAIL:  Connection matched file "/data/pg_hba.conf" line 133: "host    repmgr        repmgr      0.0.0.0/0      md5"
+[2025-12-07 03:47:12] [ERROR] connection to database failed
+[2025-12-07 03:47:12] [DETAIL] 
+connection to server at "pg02" (10.0.5.15), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+[2025-12-07 03:47:12] [DETAIL] attempted to connect using:
+  user=repmgr password=4ePLvfurCGSvaB connect_timeout=2 dbname=repmgr host=pg02 fallback_application_name=repmgr options=-csearch_path=
+2025-12-07 03:47:12,932 WARN exited: repmgr (exit status 6; not expected)
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:47:13,742 INFO spawned: 'repmgr' with pid 272
+sleep 60 before starting repmgrd
+2025-12-07 03:47:13.766 UTC [271] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.11), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:47:13.768 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+2025-12-07 03:47:14,769 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-07 03:47:15.404 UTC [277] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:47:15.404 UTC [277] DETAIL:  Connection matched file "/data/pg_hba.conf" line 133: "host    repmgr        repmgr      0.0.0.0/0      md5"
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:47:18.768 UTC [288] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.12), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:47:18.771 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:47:23.762 UTC [294] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.12), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:47:23.765 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8
+2025-12-07 03:47:25.442 UTC [298] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:47:25.442 UTC [298] DETAIL:  Connection matched file "/data/pg_hba.conf" line 133: "host    repmgr        repmgr      0.0.0.0/0      md5"
+cp: cannot stat '/archive/00000001000000000000002A': No such file or directory
+2025-12-07 03:47:28.771 UTC [309] FATAL:  could not connect to the primary server: connection to server at "pg01" (10.0.5.12), port 5432 failed: FATAL:  password authentication failed for user "repmgr"
+cp: cannot stat '/archive/00000002.history': No such file or directory
+2025-12-07 03:47:28.773 UTC [113] LOG:  waiting for WAL to become available at 0/2A0001F8

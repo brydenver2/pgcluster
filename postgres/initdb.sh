@@ -339,33 +339,43 @@ else
   # Start postgres temporarily to check/install extension - listen on all addresses for repmgr
   pg_ctl -D ${PGDATA} start -w
   
-  # Check if repmgr user exists, create if not
-  psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='repmgr'" | grep -q 1
-  if [ $? -ne 0 ] ; then
-    log_info "Creating repmgr user"
-    psql <<-EOF
-     create user repmgr with superuser login password '${REPMGRPWD}' ;
-     alter user repmgr set search_path to repmgr,"\$user",public;
-     \q
-EOF
-  else
-    log_info "repmgr user already exists, updating password"
-    log_info "Updating repmgr password (length: ${#REPMGRPWD})"
-    psql -c "alter user repmgr with superuser login password '${REPMGRPWD}';"
-    if [ $? -eq 0 ] ; then
-      log_info "repmgr password updated successfully"
-    else
-      log_info "ERROR: Failed to update repmgr password"
-    fi
-  fi
+  # Check if this is a standby node (read-only)
+  IS_IN_RECOVERY=$(psql -tAc "SELECT pg_is_in_recovery()")
   
-  # Also update postgres superuser password on every restart
-  log_info "Updating postgres superuser password"
-  psql -c "alter user postgres with login password '${PG_SUPERUSER_PWD}';"
-  if [ $? -eq 0 ] ; then
-    log_info "postgres superuser password updated successfully"
+  if [ "$IS_IN_RECOVERY" = "t" ] ; then
+    log_info "This node is a standby (read-only), skipping password updates"
+    log_info "Password will be replicated from primary node"
   else
-    log_info "ERROR: Failed to update postgres password"
+    log_info "This node is primary, updating passwords"
+    
+    # Check if repmgr user exists, create if not
+    psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='repmgr'" | grep -q 1
+    if [ $? -ne 0 ] ; then
+      log_info "Creating repmgr user"
+      psql <<-EOF
+       create user repmgr with superuser login password '${REPMGRPWD}' ;
+       alter user repmgr set search_path to repmgr,"\$user",public;
+       \q
+EOF
+    else
+      log_info "repmgr user already exists, updating password"
+      log_info "Updating repmgr password (length: ${#REPMGRPWD})"
+      psql -c "alter user repmgr with superuser login password '${REPMGRPWD}';"
+      if [ $? -eq 0 ] ; then
+        log_info "repmgr password updated successfully"
+      else
+        log_info "ERROR: Failed to update repmgr password"
+      fi
+    fi
+    
+    # Also update postgres superuser password on every restart
+    log_info "Updating postgres superuser password"
+    psql -c "alter user postgres with login password '${PG_SUPERUSER_PWD}';"
+    if [ $? -eq 0 ] ; then
+      log_info "postgres superuser password updated successfully"
+    else
+      log_info "ERROR: Failed to update postgres password"
+    fi
   fi
   
   # Test TCP/IP connection with updated password (not unix socket)

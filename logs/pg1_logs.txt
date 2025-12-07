@@ -1,87 +1,129 @@
-2025-12-06 21:53:29,347 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
-2025-12-06 21:53:29,352 INFO RPC interface 'supervisor' initialized
-2025-12-06 21:53:29,353 CRIT Server 'unix_http_server' running without any HTTP authentication checking
-2025-12-06 21:53:29,353 INFO supervisord started with pid 1
-2025-12-06 21:53:30,356 INFO spawned: 'repmgr' with pid 6
-2025-12-06 21:53:30,359 INFO spawned: 'postgres' with pid 7
-2025-12-06 21:53:30,362 INFO spawned: 'sshd' with pid 8
+2025-12-07 03:46:13,620 INFO Set uid to user 0 succeeded
+2025-12-07 03:46:13,628 INFO RPC interface 'supervisor' initialized
+2025-12-07 03:46:13,628 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2025-12-07 03:46:13,628 INFO supervisord started with pid 1
+2025-12-07 03:46:14,633 INFO spawned: 'repmgr' with pid 7
+2025-12-07 03:46:14,641 INFO spawned: 'postgres' with pid 8
+2025-12-07 03:46:14,647 INFO spawned: 'sshd' with pid 9
 sleep 60 before starting repmgrd
-2025-12-06 21:53:30,364 INFO success: postgres entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
+2025-12-07 03:46:14,670 INFO success: postgres entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
 id is : postgres
-2025-12-06 21:53:30.1765058010 - INFO - Start initdb on host pg01
-2025-12-06 21:53:30.1765058010 - INFO - MSLIST: myservice
-2025-12-06 21:53:30.1765058010 - INFO - MSOWNERPWDLIST: myservice_owner
-2025-12-06 21:53:30.1765058010 - INFO - MSUSERPWDLIST: myservice_user
-2025-12-06 21:53:30.1765058010 - INFO - PGDATA: /data
-2025-12-06 21:53:30.1765058010 - INFO - INITIAL_NODE_TYPE: master
-2025-12-06 21:53:30.1765058010 - INFO - NODE_ID: 1
-2025-12-06 21:53:30.1765058010 - INFO - NODE_NAME: pg01
-2025-12-06 21:53:30.1765058010 - INFO - ARCHIVELOG: 1
-2025-12-06 21:53:30.1765058010 - INFO - PG_MASTER_NODE_NAME: pg01
-2025-12-06 21:53:30.1765058010 - INFO - docker: yes
-2025-12-06 21:53:30.1765058010 - INFO - REPMGRD_FAILOVER_MODE: manual
-2025-12-06 21:53:30.1765058010 - INFO - repmgr password set via env
-2025-12-06 21:53:30.1765058010 - INFO - setup .pgpass for replication and for repmgr
-2025-12-06 21:53:30.1765058010 - INFO - File /data/postgresql.conf already exist
-2025-12-06 21:53:30.1765058010 - INFO - Checking if repmgr database and extension need to be set up
-waiting for server to start....2025-12-06 21:53:30.502 UTC [39] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
-2025-12-06 21:53:30.503 UTC [39] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-2025-12-06 21:53:30.503 UTC [39] LOG:  listening on IPv6 address "::", port 5432
-2025-12-06 21:53:30.514 UTC [39] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2025-12-06 21:53:30.524 UTC [42] LOG:  database system was shut down at 2025-12-06 21:48:29 UTC
-2025-12-06 21:53:30.545 UTC [39] LOG:  database system is ready to accept connections
+2025-12-07 03:46:14.1765079174 - INFO - Start initdb on host pg01
+2025-12-07 03:46:14.1765079174 - INFO - MSLIST: myservice
+2025-12-07 03:46:14.1765079174 - INFO - MSOWNERPWDLIST: myservice_owner
+2025-12-07 03:46:14.1765079174 - INFO - MSUSERPWDLIST: myservice_user
+2025-12-07 03:46:14.1765079174 - INFO - PGDATA: /data
+2025-12-07 03:46:14.1765079174 - INFO - INITIAL_NODE_TYPE: master
+2025-12-07 03:46:14.1765079174 - INFO - NODE_ID: 1
+2025-12-07 03:46:14.1765079174 - INFO - NODE_NAME: pg01
+2025-12-07 03:46:14.1765079174 - INFO - ARCHIVELOG: 1
+2025-12-07 03:46:14.1765079174 - INFO - PG_MASTER_NODE_NAME: pg01
+2025-12-07 03:46:14.1765079174 - INFO - docker: yes
+2025-12-07 03:46:14.1765079174 - INFO - REPMGRD_FAILOVER_MODE: manual
+2025-12-07 03:46:14.1765079174 - INFO - repmgr password loaded from file: /run/secrets/repmgr_password
+2025-12-07 03:46:14.1765079174 - INFO - repmgr password length: 14 characters
+2025-12-07 03:46:14.1765079174 - INFO - repmgr password debug: starts with '4eP', ends with 'vaB'
+2025-12-07 03:46:14.1765079174 - INFO - postgres superuser password loaded from file: /run/secrets/postgres_password
+2025-12-07 03:46:14.1765079174 - INFO - setup .pgpass for replication and for repmgr
+2025-12-07 03:46:14.1765079174 - INFO - File /data/postgresql.conf already exist
+2025-12-07 03:46:14.1765079174 - INFO - Checking if repmgr database and extension need to be set up
+waiting for server to start....2025-12-07 03:46:15.152 UTC [59] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+2025-12-07 03:46:15.152 UTC [59] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2025-12-07 03:46:15.152 UTC [59] LOG:  listening on IPv6 address "::", port 5432
+2025-12-07 03:46:15.165 UTC [59] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-12-07 03:46:15.193 UTC [62] LOG:  database system was shut down at 2025-12-07 03:24:24 UTC
+2025-12-07 03:46:15.227 UTC [59] LOG:  database system is ready to accept connections
  done
 server started
-2025-12-06 21:53:30.1765058010 - INFO - repmgr user already exists
-2025-12-06 21:53:30.1765058010 - INFO - repmgr database already exists
-2025-12-06 21:53:30.1765058010 - INFO - repmgr extension already installed
-2025-12-06 21:53:30.1765058010 - INFO - Checking if node is registered in repmgr metadata
-2025-12-06 21:53:30.1765058010 - INFO - Node already registered in repmgr metadata
-2025-12-06 21:53:30.756 UTC [39] LOG:  received fast shutdown request
-waiting for server to shut down....2025-12-06 21:53:30.761 UTC [39] LOG:  aborting any active transactions
-2025-12-06 21:53:30.763 UTC [39] LOG:  background worker "logical replication launcher" (PID 46) exited with exit code 1
-2025-12-06 21:53:30.764 UTC [40] LOG:  shutting down
-2025-12-06 21:53:30.798 UTC [40] LOG:  checkpoint starting: shutdown immediate
-archiving pg_wal/000000010000000000000025
-2025-12-06 21:53:30.825 UTC [40] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.010 s, sync=0.003 s, total=0.032 s; sync files=2, longest=0.002 s, average=0.002 s; distance=16384 kB, estimate=16384 kB; lsn=0/26000028, redo lsn=0/26000028
-2025-12-06 21:53:30.837 UTC [39] LOG:  database system is shut down
+2025-12-07 03:46:15.1765079175 - INFO - repmgr user already exists, updating password
+2025-12-07 03:46:15.1765079175 - INFO - Updating repmgr password (length: 14)
+ALTER ROLE
+2025-12-07 03:46:15.1765079175 - INFO - repmgr password updated successfully
+2025-12-07 03:46:15.1765079175 - INFO - Updating postgres superuser password
+ALTER ROLE
+2025-12-07 03:46:15,655 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-07 03:46:15,655 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-12-07 03:46:15.1765079175 - INFO - postgres superuser password updated successfully
+2025-12-07 03:46:15.1765079175 - INFO - Testing TCP/IP repmgr authentication with updated password
+2025-12-07 03:46:15.1765079175 - INFO - SUCCESS: repmgr TCP/IP authentication test passed
+2025-12-07 03:46:15.1765079175 - INFO - Testing replication connection with updated password
+2025-12-07 03:46:15.1765079175 - INFO - SUCCESS: replication authentication test passed
+2025-12-07 03:46:15.1765079175 - INFO - repmgr database already exists
+2025-12-07 03:46:15.1765079175 - INFO - repmgr extension already installed
+2025-12-07 03:46:15.1765079175 - INFO - Checking if node is registered in repmgr metadata
+2025-12-07 03:46:16.1765079176 - INFO - Node already registered in repmgr metadata
+2025-12-07 03:46:16.049 UTC [59] LOG:  received fast shutdown request
+waiting for server to shut down....2025-12-07 03:46:16.054 UTC [59] LOG:  aborting any active transactions
+2025-12-07 03:46:16.060 UTC [59] LOG:  background worker "logical replication launcher" (PID 66) exited with exit code 1
+2025-12-07 03:46:16.060 UTC [60] LOG:  shutting down
+2025-12-07 03:46:16.107 UTC [60] LOG:  checkpoint starting: shutdown immediate
+archiving pg_wal/000000010000000000000033
+2025-12-07 03:46:16.209 UTC [60] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.014 s, sync=0.006 s, total=0.108 s; sync files=3, longest=0.004 s, average=0.002 s; distance=16384 kB, estimate=16384 kB; lsn=0/34000028, redo lsn=0/34000028
+2025-12-07 03:46:16.217 UTC [59] LOG:  database system is shut down
  done
 server stopped
-2025-12-06 21:53:30,856 INFO reaped unknown pid 39 (exit status 0)
+2025-12-07 03:46:16,251 INFO reaped unknown pid 59 (exit status 0)
 UID          PID    PPID  C STIME TTY          TIME CMD
-root           1       0 13 21:53 ?        00:00:00 /usr/bin/python3 /usr/bin/supervisord --configuration=/etc/supervisor/supervisord.conf
-postgres       6       1  0 21:53 ?        00:00:00 /bin/bash /scripts/start_repmgr.sh
-postgres       7       1  2 21:53 ?        00:00:00 /bin/bash /scripts/initdb.sh
-root           8       1  2 21:53 ?        00:00:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
-postgres       9       6  0 21:53 ?        00:00:00 sleep 60
-postgres      69       7  0 21:53 ?        00:00:00 ps -ef
-2025-12-06 21:53:30.1765058010 - INFO - start postgres in foreground
-2025-12-06 21:53:30.908 UTC [7] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
-2025-12-06 21:53:30.908 UTC [7] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-2025-12-06 21:53:30.908 UTC [7] LOG:  listening on IPv6 address "::", port 5432
-2025-12-06 21:53:30.916 UTC [7] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2025-12-06 21:53:30.929 UTC [73] LOG:  database system was shut down at 2025-12-06 21:53:30 UTC
-2025-12-06 21:53:30.942 UTC [7] LOG:  database system is ready to accept connections
-2025-12-06 21:53:31,944 INFO success: repmgr entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-2025-12-06 21:53:31,944 INFO success: sshd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-2025-12-06 21:53:39,953 INFO reaped unknown pid 97 (exit status 255)
-2025-12-06 21:53:39,953 INFO reaped unknown pid 106 (exit status 255)
-2025-12-06 21:53:40,955 INFO reaped unknown pid 118 (exit status 255)
-2025-12-06 21:53:40,955 INFO reaped unknown pid 127 (exit status 255)
-2025-12-06 21:53:42.270 UTC [141] ERROR:  role "hcuser" already exists
-2025-12-06 21:53:42.270 UTC [141] STATEMENT:  create user hcuser with login password 'hcuser';
-2025-12-06 21:53:43,272 INFO reaped unknown pid 138 (exit status 255)
-2025-12-06 21:53:43,272 INFO reaped unknown pid 148 (exit status 255)
-Node 1 already registered in repmgr metadata
-[2025-12-06 21:54:30] [NOTICE] using provided configuration file "/etc/repmgr/17/repmgr.conf"
-[2025-12-06 21:54:30] [NOTICE] repmgrd (repmgrd 5.5.0) starting up
-[2025-12-06 21:54:30] [INFO] connecting to database "host=pg01 dbname=repmgr user=repmgr password=rep123 connect_timeout=2"
-INFO:  set_repmgrd_pid(): provided pidfile is /tmp/repmgrd.pid
-[2025-12-06 21:54:30] [NOTICE] starting monitoring of node "pg01" (ID: 1)
-[2025-12-06 21:54:30] [INFO] "connection_check_type" set to "ping"
-[2025-12-06 21:54:30] [INFO] executing notification command for event "repmgrd_start"
-[2025-12-06 21:54:30] [DETAIL] command is:
-  /scripts/repmgrd_event.sh 1 "repmgrd_start" 1 "2025-12-06 21:54:30.464911+00" "monitoring cluster primary \"pg01\" (ID: 1)"   
-[2025-12-06 21:54:30] [NOTICE] monitoring cluster primary "pg01" (ID: 1)
-[2025-12-06 21:54:30] [INFO] child node "pg02" (ID: 2) is attached
-[2025-12-06 21:54:30] [INFO] child node "pg03" (ID: 3) is attached
+root           1       0  9 03:46 ?        00:00:00 /usr/bin/python3 /usr/bin/supervisord --configuration=/etc/supervisor/supervisord.conf
+postgres       7       1  0 03:46 ?        00:00:00 /bin/bash /scripts/start_repmgr.sh
+postgres       8       1  1 03:46 ?        00:00:00 /bin/bash /scripts/initdb.sh
+root           9       1  1 03:46 ?        00:00:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+postgres      10       7  0 03:46 ?        00:00:00 sleep 60
+postgres     105       8  0 03:46 ?        00:00:00 ps -ef
+2025-12-07 03:46:16.1765079176 - INFO - start postgres in foreground
+2025-12-07 03:46:16.320 UTC [8] LOG:  starting PostgreSQL 17.7 (Debian 17.7-3.pgdg12+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+2025-12-07 03:46:16.320 UTC [8] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2025-12-07 03:46:16.320 UTC [8] LOG:  listening on IPv6 address "::", port 5432
+2025-12-07 03:46:16.336 UTC [8] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-12-07 03:46:16.377 UTC [109] LOG:  database system was shut down at 2025-12-07 03:46:16 UTC
+2025-12-07 03:46:16.403 UTC [8] LOG:  database system is ready to accept connections
+2025-12-07 03:46:18.746 UTC [125] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:18.746 UTC [125] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:21,752 INFO reaped unknown pid 132 (exit status 255)
+2025-12-07 03:46:21,752 INFO reaped unknown pid 141 (exit status 255)
+2025-12-07 03:46:22,753 INFO reaped unknown pid 153 (exit status 255)
+2025-12-07 03:46:22,753 INFO reaped unknown pid 162 (exit status 255)
+2025-12-07 03:46:23.328 UTC [167] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:23.328 UTC [167] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:23.744 UTC [168] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:23.744 UTC [168] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:24.380 UTC [178] ERROR:  role "hcuser" already exists
+2025-12-07 03:46:24.380 UTC [178] STATEMENT:  create user hcuser with login password 'hcuser';
+2025-12-07 03:46:25,381 INFO reaped unknown pid 175 (exit status 255)
+2025-12-07 03:46:25,382 INFO reaped unknown pid 185 (exit status 255)
+2025-12-07 03:46:28.335 UTC [203] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:28.335 UTC [203] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:28.747 UTC [204] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:28.747 UTC [204] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:33.331 UTC [207] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:33.331 UTC [207] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:33.760 UTC [208] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:33.760 UTC [208] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:38.334 UTC [211] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:38.334 UTC [211] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:38.754 UTC [223] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:38.754 UTC [223] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:43.336 UTC [225] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:43.336 UTC [225] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:43.751 UTC [226] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:43.751 UTC [226] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:48.341 UTC [230] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:48.341 UTC [230] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:48.758 UTC [243] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:48.758 UTC [243] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:53.340 UTC [245] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:53.340 UTC [245] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:53.761 UTC [246] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:53.761 UTC [246] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:58.347 UTC [249] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:58.347 UTC [249] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:46:58.762 UTC [250] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:46:58.762 UTC [250] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:47:03.354 UTC [263] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:47:03.354 UTC [263] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:47:03.769 UTC [264] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:47:03.769 UTC [264] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:47:08.352 UTC [267] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:47:08.352 UTC [267] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
+2025-12-07 03:47:08.761 UTC [268] FATAL:  password authentication failed for user "repmgr"
+2025-12-07 03:47:08.761 UTC [268] DETAIL:  Connection matched file "/data/pg_hba.conf" line 130: "host   replication   repmgr      0.0.0.0/0       md5"
