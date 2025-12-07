@@ -368,14 +368,24 @@ EOF
     log_info "ERROR: Failed to update postgres password"
   fi
   
-  # Test local connection with updated password
-  log_info "Testing local repmgr authentication with updated password"
-  psql -h localhost -U repmgr -d repmgr -c "SELECT 1;" > /tmp/auth_test.log 2>&1
+  # Test TCP/IP connection with updated password (not unix socket)
+  log_info "Testing TCP/IP repmgr authentication with updated password"
+  PGPASSWORD="${REPMGRPWD}" psql -h 127.0.0.1 -U repmgr -d repmgr -c "SELECT 1;" > /tmp/auth_test.log 2>&1
   if [ $? -eq 0 ] ; then
-    log_info "SUCCESS: repmgr authentication test passed"
+    log_info "SUCCESS: repmgr TCP/IP authentication test passed"
   else
-    log_info "ERROR: repmgr authentication test failed:"
+    log_info "ERROR: repmgr TCP/IP authentication test failed:"
     cat /tmp/auth_test.log | while read line; do log_info "  $line"; done
+  fi
+  
+  # Also test replication connection
+  log_info "Testing replication connection with updated password"
+  PGPASSWORD="${REPMGRPWD}" psql -h 127.0.0.1 -U repmgr -d replication=yes -c "IDENTIFY_SYSTEM;" > /tmp/repl_test.log 2>&1
+  if [ $? -eq 0 ] ; then
+    log_info "SUCCESS: replication authentication test passed"
+  else
+    log_info "ERROR: replication authentication test failed:"
+    cat /tmp/repl_test.log | while read line; do log_info "  $line"; done
   fi
   
   # Check if repmgr database exists, create if not
