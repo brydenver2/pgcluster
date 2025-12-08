@@ -205,6 +205,8 @@ echo FAILOVER_MODE=${FAILOVER_MODE}
 
 # make connections via psql convenient
 echo "*:*:repmgr:repmgr:${REPMGRPWD}" > /home/postgres/.pgpass
+echo "*:*:postgres:postgres:${POSTGRES_PASSWORD}" >> /home/postgres/.pgpass
+echo "*:*:*:hcuser:hcuser" >> /home/postgres/.pgpass
 chmod 600 /home/postgres/.pgpass
 
 
