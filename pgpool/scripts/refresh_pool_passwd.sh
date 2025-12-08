@@ -45,13 +45,8 @@ fi
 # Create new pool_passwd file
 touch ${POOL_PASSWD_FILE}
 
-# Add postgres user if password is provided
-if [ ! -z "${POSTGRES_PASSWORD}" ]; then
-  echo "Adding postgres user with password..."
-  PG_MD5_HASH=$(pg_md5 -u postgres ${POSTGRES_PASSWORD})
-  sed -i -e "/^postgres:/d" ${POOL_PASSWD_FILE}
-  echo "postgres:${PG_MD5_HASH}" >> ${POOL_PASSWD_FILE}
-fi
+# Note: We don't manually add postgres here - it will be fetched from pg_authid below
+# This ensures the hash matches what's in PostgreSQL (SCRAM-SHA-256 or other)
 
 # Fetch all user passwords from backend database via SSH
 echo "Fetching user passwords from ${DBHOST}..."

@@ -266,12 +266,12 @@ if [ ! -f ${PGDATA}/postgresql.conf ] ; then
 # replication manager
 local  replication   repmgr                      trust
 host   replication   repmgr      127.0.0.1/32    trust
-host   replication   repmgr      0.0.0.0/0       md5
+host   replication   repmgr      0.0.0.0/0       scram-sha-256
 local   repmgr        repmgr                     trust
 host    repmgr        repmgr      127.0.0.1/32   trust
-host    repmgr        repmgr      0.0.0.0/0      md5
+host    repmgr        repmgr      0.0.0.0/0      scram-sha-256
 EOF
-    echo "host     all           all        0.0.0.0/0            md5" >> $PGDATA/pg_hba.conf
+    echo "host     all           all        0.0.0.0/0            scram-sha-256" >> $PGDATA/pg_hba.conf
     echo starting database
     ps -ef
     # Start PostgreSQL listening on all addresses to allow repmgr registration to work
