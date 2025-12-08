@@ -7,7 +7,7 @@ if [ `id -un` != "postgres" ] ; then
 fi
 
 log_info(){
- echo `date +"%Y-%m-%d %H:%M:%S.%s"` - INFO - $1 
+ echo `date +"%Y-%m-%d %H:%M:%S.%s"` - INFO - $1
 }
 
 function shutdown()
@@ -49,7 +49,7 @@ create_user(){
 EOF
  else
   log_info "user ${MSOWNER} already exists, set password to ${MSOWNER_PWD}"
-  psql --dbname phoenix -c "alter user ${MSOWNER} with login password '{MSOWNER_PWD}';"
+  psql --dbname phoenix -c "alter user ${MSOWNER} with login password '${MSOWNER_PWD}';"
  fi
  USREXISTS=$( user_exists ${MSUSER} )
  if [ $USREXISTS -eq 0 ] ; then
@@ -68,7 +68,7 @@ EOF
 EOF
  else
   log_info "user ${MSUSER} already exists, set password to ${MSUSER_PWD}"
-  psql --dbname phoenix -c "alter user ${MSUSER} with login password '{MSUSER_PWD}'";
+  psql --dbname phoenix -c "alter user ${MSUSER} with login password '${MSUSER_PWD}'";
  fi
 }
 
@@ -79,7 +79,7 @@ wait_for_master(){
  NBRTRY=24
 
  log_info "waiting for master on ${HOST} to be ready"
- 
+
  # First, check DNS resolution
  log_info "Checking DNS resolution for ${HOST}"
  if ! getent hosts ${HOST} > /dev/null 2>&1 ; then
@@ -95,17 +95,17 @@ wait_for_master(){
  else
    log_info "DNS resolution for ${HOST} successful: $(getent hosts ${HOST})"
  fi
- 
+
  # Verify .pgpass is readable
  if [ ! -f /home/postgres/.pgpass ] ; then
    log_info "ERROR: /home/postgres/.pgpass does not exist!"
  else
    log_info ".pgpass file exists with permissions: $(ls -la /home/postgres/.pgpass)"
  fi
- 
+
  # Ensure PGPASSFILE is set
  export PGPASSFILE=/home/postgres/.pgpass
- 
+
  nbrlines=0
  while [ $nbrlines -lt 1 -a $NBRTRY -gt 0 ] ; do
   echo "waiting for repmgr node to be initialized with the master (attempt $((25-NBRTRY))/24)"
@@ -128,7 +128,7 @@ wait_for_master(){
     sleep $SLEEP_TIME
   fi
  done
- 
+
  # Return success if we found at least one node, failure otherwise
  if [ $nbrlines -ge 1 ] ; then
    log_info "Master has $nbrlines nodes registered, proceeding with standby setup"
@@ -140,12 +140,12 @@ wait_for_master(){
 }
 
 log_info "Start initdb on host `hostname`"
-log_info "MSLIST: ${MSLIST}" 
-log_info "MSOWNERPWDLIST: ${MSOWNERPWDLIST}" 
-log_info "MSUSERPWDLIST: ${MSUSERPWDLIST}" 
-log_info "PGDATA: ${PGDATA}" 
-INITIAL_NODE_TYPE=${INITIAL_NODE_TYPE:-single} 
-log_info "INITIAL_NODE_TYPE: ${INITIAL_NODE_TYPE}" 
+log_info "MSLIST: ${MSLIST}"
+log_info "MSOWNERPWDLIST: ${MSOWNERPWDLIST}"
+log_info "MSUSERPWDLIST: ${MSUSERPWDLIST}"
+log_info "PGDATA: ${PGDATA}"
+INITIAL_NODE_TYPE=${INITIAL_NODE_TYPE:-single}
+log_info "INITIAL_NODE_TYPE: ${INITIAL_NODE_TYPE}"
 export PATH=$PATH:/usr/lib/postgresql/${PGVER}/bin
 MSLIST=${MSLIST-"keycloak,apiman,asset,ingest,playout"}
 NODE_ID=${NODE_ID:-1}
@@ -218,7 +218,7 @@ echo "*:*:repmgr:repmgr:${REPMGRPWD}" > /home/postgres/.pgpass
 echo "*:*:replication:repmgr:${REPMGRPWD}" >> /home/postgres/.pgpass
 chmod 600 /home/postgres/.pgpass
 
-# patch script /scripts/repmgrd_event.sh 
+# patch script /scripts/repmgrd_event.sh
 sed -i -e "s/##REPMGRD_FAILOVER_MODE##/${REPMGRD_FAILOVER_MODE}/" /scripts/repmgrd_event.sh
 #build repmgr.conf
 sudo touch /etc/repmgr/${PGVER}/repmgr.conf && sudo chown postgres:postgres /etc/repmgr/${PGVER}/repmgr.conf
@@ -275,7 +275,7 @@ EOF
     echo starting database
     ps -ef
     # Start PostgreSQL listening on all addresses to allow repmgr registration to work
-    pg_ctl -D ${PGDATA} start -w 
+    pg_ctl -D ${PGDATA} start -w
     psql --command "create database phoenix ENCODING='UTF8' LC_COLLATE='en_US.UTF8';"
     create_microservices
     psql phoenix -c "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"";
@@ -338,16 +338,16 @@ else
   log_info "Checking if repmgr database and extension need to be set up"
   # Start postgres temporarily to check/install extension - listen on all addresses for repmgr
   pg_ctl -D ${PGDATA} start -w
-  
+
   # Check if this is a standby node (read-only)
   IS_IN_RECOVERY=$(psql -tAc "SELECT pg_is_in_recovery()")
-  
+
   if [ "$IS_IN_RECOVERY" = "t" ] ; then
     log_info "This node is a standby (read-only), skipping password updates"
     log_info "Password will be replicated from primary node"
   else
     log_info "This node is primary, updating passwords"
-    
+
     # Check if repmgr user exists, create if not
     psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='repmgr'" | grep -q 1
     if [ $? -ne 0 ] ; then
@@ -367,7 +367,7 @@ EOF
         log_info "ERROR: Failed to update repmgr password"
       fi
     fi
-    
+
     # Also update postgres superuser password on every restart
     log_info "Updating postgres superuser password"
     psql -c "alter user postgres with login password '${PG_SUPERUSER_PWD}';"
@@ -377,7 +377,7 @@ EOF
       log_info "ERROR: Failed to update postgres password"
     fi
   fi
-  
+
   # Test TCP/IP connection with updated password (not unix socket)
   log_info "Testing TCP/IP repmgr authentication with updated password"
   PGPASSWORD="${REPMGRPWD}" psql -h 127.0.0.1 -U repmgr -d repmgr -c "SELECT 1;" > /tmp/auth_test.log 2>&1
@@ -387,7 +387,7 @@ EOF
     log_info "ERROR: repmgr TCP/IP authentication test failed:"
     cat /tmp/auth_test.log | while read line; do log_info "  $line"; done
   fi
-  
+
   # Also test replication connection
   log_info "Testing replication connection with updated password"
   PGPASSWORD="${REPMGRPWD}" psql -h 127.0.0.1 -U repmgr -d replication=yes -c "IDENTIFY_SYSTEM;" > /tmp/repl_test.log 2>&1
@@ -397,7 +397,7 @@ EOF
     log_info "ERROR: replication authentication test failed:"
     cat /tmp/repl_test.log | while read line; do log_info "  $line"; done
   fi
-  
+
   # Check if repmgr database exists, create if not
   psql -lqt | cut -d \| -f 1 | grep -qw repmgr
   if [ $? -ne 0 ] ; then
@@ -406,7 +406,7 @@ EOF
   else
     log_info "repmgr database already exists"
   fi
-  
+
   # Check if repmgr extension exists, create if not
   psql -d repmgr -tAc "SELECT 1 FROM pg_extension WHERE extname='repmgr'" | grep -q 1
   if [ $? -ne 0 ] ; then
@@ -415,7 +415,7 @@ EOF
   else
     log_info "repmgr extension already installed"
   fi
-  
+
   # Check if this node is registered in repmgr metadata
   log_info "Checking if node is registered in repmgr metadata"
   NODE_REGISTERED=$(psql -d repmgr -tAc "SELECT COUNT(*) FROM repmgr.nodes WHERE node_id=${NODE_ID}")
@@ -457,7 +457,7 @@ EOF
         fi
         sleep 10
       done
-      
+
       if [ $PRIMARY_READY -eq 1 ] ; then
         log_info "Registering standby with repmgr"
         repmgr -f /etc/repmgr/${PGVER}/repmgr.conf -v standby register --force
@@ -474,7 +474,7 @@ EOF
   else
     log_info "Node already registered in repmgr metadata"
   fi
-  
+
   # Stop postgres before starting in foreground
   pg_ctl stop -w
 fi
@@ -482,4 +482,4 @@ fi
 trap shutdown HUP INT QUIT ABRT KILL ALRM TERM TSTP
 ps -ef
 log_info "start postgres in foreground"
-exec postgres -D ${PGDATA} 
+exec postgres -D ${PGDATA}

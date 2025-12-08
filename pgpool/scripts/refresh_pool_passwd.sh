@@ -28,7 +28,7 @@ fi
 if [ ! -z "${POSTGRES_PASSWORD_FILE}" ] && [ -f "${POSTGRES_PASSWORD_FILE}" ] ; then
   POSTGRES_PASSWORD=$(cat ${POSTGRES_PASSWORD_FILE} | tr -d '\n\r' | xargs)
 else
-  POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+  POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-${REPMGRPWD}}
 fi
 
 # Setup pgpass for connections

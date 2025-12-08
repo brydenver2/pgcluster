@@ -5,7 +5,7 @@
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
-  
+
   // JavaScript/Node.js settings
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -14,7 +14,7 @@
       "source.fixAll.eslint": "explicit"
     }
   },
-  
+
   // JSON settings
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
@@ -22,51 +22,55 @@
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
-  
+
   // Markdown settings
   "[markdown]": {
     "editor.wordWrap": "on",
-    "editor.quickSuggestions": false
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
   },
-  
+
   // Shell script settings
   "[shellscript]": {
     "editor.tabSize": 2,
     "files.eol": "\n"
   },
-  
+
   // YAML settings (for docker-compose files)
   "[yaml]": {
     "editor.tabSize": 2,
     "editor.insertSpaces": true
   },
-  
+
   // Docker file settings
   "[dockerfile]": {
     "editor.tabSize": 2
   },
-  
+
   // ESLint settings
   "eslint.enable": true,
   "eslint.workingDirectories": [
     "manager/server",
     "manager/client"
   ],
-  
+
   // File exclusions for better performance
   "files.exclude": {
     "**/.git": true,
     "**/node_modules": true,
     "**/build": true
   },
-  
+
   // Search exclusions
   "search.exclude": {
     "**/node_modules": true,
     "**/build": true,
     "**/.git": true
   },
-  
+
   // File associations
   "files.associations": {
     "*.conf": "properties",

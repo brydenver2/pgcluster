@@ -142,7 +142,7 @@ updateConfig(){
   echo "${CONFIG} = ${VALUE}" >> $CONFIG_FILE
 }
 
- 
+
 
 injectConfigsFromEnv(){
   # inject configuration from env variables prefixed with PGPOOL_
@@ -182,8 +182,8 @@ if [ ! -z "${POSTGRES_PASSWORD_FILE}" ] && [ -f "${POSTGRES_PASSWORD_FILE}" ] ; 
   POSTGRES_PASSWORD=$(cat ${POSTGRES_PASSWORD_FILE} | tr -d '\n\r' | xargs)
   echo "POSTGRES_PASSWORD loaded from file: ${POSTGRES_PASSWORD_FILE}"
 else
-  POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-  echo "POSTGRES_PASSWORD loaded from environment variable"
+  POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-${REPMGRPWD}}
+  echo "POSTGRES_PASSWORD loaded from environment variable or defaulting to REPMGRPWD"
 fi
 
 FAILOVER_ON_BACKEND_ERROR=${FAILOVER_ON_BACKEND_ERROR:-off}
@@ -248,7 +248,7 @@ if [ -f /tmp/.not_host_mounted ] ; then
  fi
 else
  # so that we skip the logic below
- echo "/tmp is mounted from the host, will reuse /tmp/pgpool_status" 
+ echo "/tmp is mounted from the host, will reuse /tmp/pgpool_status"
  masterup=1
 fi
 if [ $masterup -eq 0 -a ${FAILOVER_MODE} == "automatic" ] ; then
@@ -577,11 +577,11 @@ follow_master_command = '/scripts/follow_master.sh %d %h %m %p %H %M %P'
                                                                    #   %R = new master database cluster path
                                    #   %% = '%' character
 EOF
-else 
+else
   cat <<EOF >> $CONFIG_FILE
 failover_command = ''
-failback_command = '' 
-follow_master_command = '' 
+failback_command = ''
+follow_master_command = ''
 EOF
 fi
 
