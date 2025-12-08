@@ -213,11 +213,13 @@ services:
     image: registry.local.wallacearizona.us/pgpool:1.0.1
     hostname: pgpool
     secrets:
+      - postgres_password
       - repmgr_password
     environment:
       PGMASTER_NODE_NAME: pg01
       PG_BACKEND_NODE_LIST: 0:pg01:5432:1:/data:ALLOW_TO_FAILOVER,1:pg02:5432:1:/data:ALLOW_TO_FAILOVER,2:pg03:5432:1:/data:ALLOW_TO_FAILOVER
       PGP_NODE_NAME: pgpool
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       REPMGRPWD_FILE: /run/secrets/repmgr_password
       FAILOVER_MODE: automatic
       PGPOOL_HEALTH_CHECK_MAX_RETRIES: 3
@@ -227,6 +229,13 @@ services:
       PGPOOL_NUM_INIT_CHILDREN: 50
       PGPOOL_LOAD_BALANCE_MODE: "no"
       PGPOOL_LOG_CONNECTIONS: "off"
+      # Optional: Enable automatic pool_passwd refresh via cron
+      # Format: "minute hour day month dayofweek"
+      # Examples:
+      #   "*/30 * * * *"     - Every 30 minutes
+      #   "0 */2 * * *"      - Every 2 hours
+      #   "0 0 * * *"        - Daily at midnight
+      # POOL_PASSWD_REFRESH_CRON: "0 */6 * * *"  # Every 6 hours
     networks:
       - pgcluster_network
       - traefik_proxy

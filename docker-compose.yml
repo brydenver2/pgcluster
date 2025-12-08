@@ -70,6 +70,7 @@ services:
                 # not needed when there is a single postgres DB
       PGP_NODE_NAME: pgpool
       REPMGRPWD: rep123
+      POSTGRES_PASSWORD: postgres
       FAILOVER_MODE: automatic
       PGPOOL_HEALTH_CHECK_MAX_RETRIES: 6
       PGPOOL_HEALTH_CHECK_RETRY_DELAY: 5

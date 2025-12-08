@@ -176,6 +176,16 @@ else
   REPMGRPWD=${REPMGRPWD:-rep123}
   echo "REPMGRPWD=${REPMGRPWD}"
 fi
+
+# Read POSTGRES_PASSWORD from file or environment
+if [ ! -z "${POSTGRES_PASSWORD_FILE}" ] && [ -f "${POSTGRES_PASSWORD_FILE}" ] ; then
+  POSTGRES_PASSWORD=$(cat ${POSTGRES_PASSWORD_FILE} | tr -d '\n\r' | xargs)
+  echo "POSTGRES_PASSWORD loaded from file: ${POSTGRES_PASSWORD_FILE}"
+else
+  POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+  echo "POSTGRES_PASSWORD loaded from environment variable"
+fi
+
 FAILOVER_ON_BACKEND_ERROR=${FAILOVER_ON_BACKEND_ERROR:-off}
 echo FAILOVER_ON_BACKEND_ERROR=${FAILOVER_ON_BACKEND_ERROR}
 CONNECTION_CACHE=${CONNECTION_CACHE:-on}
@@ -269,13 +279,29 @@ echo "Create user hcuser (fails if the hcuser already exists, which is ok)"
 ssh -p 222 ${REPMGR_MASTER} "psql -c \"create user hcuser with login password 'hcuser';\""
 echo "Generate pool_passwd file from ${DBHOST}"
 touch ${CONFIG_DIR}/pool_passwd
-ssh -p 222 postgres@${DBHOST} "psql -c \"select rolname,rolpassword from pg_authid;\"" | awk 'BEGIN {FS="|"}{print $1" "$2}' | grep -E "md5|SCRAM-SHA-256" | while read f1 f2
+
+# If POSTGRES_PASSWORD is provided, add it to pool_passwd using pg_md5
+if [ ! -z "${POSTGRES_PASSWORD}" ]; then
+  echo "Adding postgres user with password from POSTGRES_PASSWORD env variable"
+  # Use pg_md5 to create the password entry
+  PG_MD5_HASH=$(pg_md5 -u postgres ${POSTGRES_PASSWORD})
+  sed -i -e "/^postgres:/d" ${CONFIG_DIR}/pool_passwd
+  echo "postgres:${PG_MD5_HASH}" >> ${CONFIG_DIR}/pool_passwd
+fi
+
+# Fetch all user passwords from backend database
+ssh -p 222 postgres@${DBHOST} "psql -t -A -c \"select rolname || ':' || rolpassword from pg_authid where rolpassword is not null;\"" | while IFS=: read f1 f2
 do
- # delete the line and recreate it
- echo "setting passwd of $f1 in ${CONFIG_DIR}/pool_passwd"
- sed -i -e "/^${f1}:/d" ${CONFIG_DIR}/pool_passwd
- echo $f1:$f2 >> ${CONFIG_DIR}/pool_passwd
+ # Only add if password hash exists and starts with md5 or SCRAM
+ if [[ "$f2" =~ ^(md5|SCRAM-SHA-256) ]]; then
+   echo "setting passwd of $f1 in ${CONFIG_DIR}/pool_passwd"
+   sed -i -e "/^${f1}:/d" ${CONFIG_DIR}/pool_passwd
+   echo "$f1:$f2" >> ${CONFIG_DIR}/pool_passwd
+ fi
 done
+
+echo "Pool passwd file contents:"
+cat ${CONFIG_DIR}/pool_passwd
 echo "Builing the configuration in $CONFIG_FILE"
 
 cat <<EOF > $CONFIG_FILE
@@ -792,6 +818,31 @@ EOF
 rm -f /var/run/pgpool/pgpool.pid /var/run/pgpool/.s.PGSQL.9999 /var/run/pgpool/.s.PGSQL.9898 2>/dev/null
 log_info "inject env variables into config file"
 injectConfigsFromEnv
+
+# Save environment variables for cron jobs
+cat > /tmp/pgpool_env <<ENVEOF
+export PG_BACKEND_NODE_LIST="${PG_BACKEND_NODE_LIST}"
+export PGMASTER_NODE_NAME="${PGMASTER_NODE_NAME}"
+export REPMGRPWD_FILE="${REPMGRPWD_FILE}"
+export REPMGRPWD="${REPMGRPWD}"
+export POSTGRES_PASSWORD_FILE="${POSTGRES_PASSWORD_FILE}"
+export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
+ENVEOF
+
+# Setup cron for automatic pool_passwd refresh if enabled
+if [ "${POOL_PASSWD_REFRESH_CRON}" != "" ]; then
+  log_info "Setting up cron for pool_passwd refresh: ${POOL_PASSWD_REFRESH_CRON}"
+  echo "${POOL_PASSWD_REFRESH_CRON} /scripts/cron_refresh_pool_passwd.sh" > /tmp/pgpool_cron
+  crontab -u postgres /tmp/pgpool_cron
+  # Start cron in background if not already running
+  if ! pgrep -x "cron" > /dev/null; then
+    sudo cron
+    log_info "Cron daemon started"
+  fi
+else
+  log_info "Automatic pool_passwd refresh not enabled (set POOL_PASSWD_REFRESH_CRON to enable)"
+fi
+
 log_info "Start pgpool in foreground"
 # Try different possible pgpool binary locations
 if [ -x /usr/sbin/pgpool2 ]; then

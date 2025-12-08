@@ -4,7 +4,7 @@ ENV PGPOOLMAJOR=4.6
 ENV PGPOOLVER=4.6.0
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y passwd sudo ca-certificates gnupg lsb-release curl && \
+    apt-get install -y passwd sudo ca-certificates gnupg lsb-release curl cron && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN groupadd -g 50010 postgres && useradd -u 50010 -g postgres -m postgres 
 RUN usermod -aG sudo postgres && echo "postgres:postgres" | chpasswd
