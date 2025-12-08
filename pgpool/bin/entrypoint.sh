@@ -280,16 +280,7 @@ ssh -p 222 ${REPMGR_MASTER} "psql -c \"create user hcuser with login password 'h
 echo "Generate pool_passwd file from ${DBHOST}"
 touch ${CONFIG_DIR}/pool_passwd
 
-# If POSTGRES_PASSWORD is provided, add it to pool_passwd using pg_md5
-if [ ! -z "${POSTGRES_PASSWORD}" ]; then
-  echo "Adding postgres user with password from POSTGRES_PASSWORD env variable"
-  # Use pg_md5 to create the password entry
-  PG_MD5_HASH=$(pg_md5 -u postgres ${POSTGRES_PASSWORD})
-  sed -i -e "/^postgres:/d" ${CONFIG_DIR}/pool_passwd
-  echo "postgres:${PG_MD5_HASH}" >> ${CONFIG_DIR}/pool_passwd
-fi
-
-# Fetch all user passwords from backend database
+# Fetch all user passwords from backend database first
 ssh -p 222 postgres@${DBHOST} "psql -t -A -c \"select rolname || ':' || rolpassword from pg_authid where rolpassword is not null;\"" | while IFS=: read f1 f2
 do
  # Only add if password hash exists and starts with md5 or SCRAM
