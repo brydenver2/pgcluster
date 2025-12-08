@@ -269,7 +269,7 @@ echo "Create user hcuser (fails if the hcuser already exists, which is ok)"
 ssh -p 222 ${REPMGR_MASTER} "psql -c \"create user hcuser with login password 'hcuser';\""
 echo "Generate pool_passwd file from ${DBHOST}"
 touch ${CONFIG_DIR}/pool_passwd
-ssh -p 222 postgres@${DBHOST} "psql -c \"select rolname,rolpassword from pg_authid;\"" | awk 'BEGIN {FS="|"}{print $1" "$2}' | grep md5 | while read f1 f2
+ssh -p 222 postgres@${DBHOST} "psql -c \"select rolname,rolpassword from pg_authid;\"" | awk 'BEGIN {FS="|"}{print $1" "$2}' | grep -E "md5|SCRAM-SHA-256" | while read f1 f2
 do
  # delete the line and recreate it
  echo "setting passwd of $f1 in ${CONFIG_DIR}/pool_passwd"
