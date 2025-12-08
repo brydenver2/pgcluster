@@ -210,7 +210,7 @@ services:
         - "com.wallacearizona.cluster=pgcluster"
 
   pgpool:
-    image: registry.local.wallacearizona.us/pgpool:1.0.1
+    image: registry.local.wallacearizona.us/pgpool:1.0.2
     hostname: pgpool
     secrets:
       - postgres_password
