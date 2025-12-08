@@ -322,7 +322,12 @@ cat <<EOF >> $CONFIG_FILE
 enable_pool_hba = on
 pool_passwd = 'pool_passwd'
 authentication_timeout = 60
-ssl = off
+# - SSL Connections -
+ssl = on
+ssl_key = '/etc/pgpool-II/server.key'
+ssl_cert = '/etc/pgpool-II/server.crt'
+ssl_ca_cert = '/etc/pgpool-II/root.crt'
+ssl_ca_cert_dir = ''
 #------------------------------------------------------------------------------
 # POOLS
 #------------------------------------------------------------------------------

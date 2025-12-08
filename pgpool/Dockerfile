@@ -1,5 +1,4 @@
 FROM debian:12
-MAINTAINER ptim007@yahoo.com
 ENV PGVER=17
 ENV PGPOOLMAJOR=4.6
 ENV PGPOOLVER=4.6.0
@@ -30,6 +29,13 @@ RUN mkdir -p /var/run/pgpool && \
     chown -R postgres:postgres /home/postgres/.ssh && chmod 700 /home/postgres/.ssh && \
     chmod 644 /home/postgres/.ssh/* && chmod 600 /home/postgres/.ssh/id_rsa && chmod 600 /home/postgres/.ssh/authorized_keys && \
     chown postgres:postgres /var/run/pgpool
+# Add SSL certificates
+ADD ssl/server.key /etc/pgpool-II/
+ADD ssl/server.crt /etc/pgpool-II/
+ADD ssl/root.crt /etc/pgpool-II/
+RUN chmod 600 /etc/pgpool-II/server.key && \
+    chmod 644 /etc/pgpool-II/server.crt && \
+    chmod 644 /etc/pgpool-II/root.crt
 ADD pool_hba.conf /etc/pgpool-II/
 # pcp user is postgres and password is postgres (hard-coded)
 # note that this user has nothing to do with postgres or linux, it is purely for pcp

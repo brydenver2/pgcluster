@@ -1,0 +1,6 @@
+# Don't copy these to the image
+*.md
+build.sh
+version.txt
+ssl/generate_certs.sh
+ssl/README.md
