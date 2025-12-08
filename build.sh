@@ -66,7 +66,7 @@ echo ""
 # docker volume ls | grep pgcluster | awk '{print $2}' | xargs docker volume rm 2>/dev/null || true
 
 echo "==> Building PostgreSQL image..."
-docker build -t pg:${VER} --no-cache=false -f postgres/Dockerfile ./postgres
+docker build -t pg:${VER} --no-cache -f postgres/Dockerfile ./postgres
 echo "✓ Successfully built pg:${VER}"
 
 if [ -n "${DOCKER_REGISTRY:-}" ]; then
@@ -78,7 +78,7 @@ fi
 
 echo ""
 echo "==> Building Pgpool image..."
-docker build -t pgpool:${VER} -f pgpool/Dockerfile ./pgpool
+docker build -t pgpool:${VER} --no-cache -f pgpool/Dockerfile ./pgpool
 echo "✓ Successfully built pgpool:${VER}"
 
 if [ -n "${DOCKER_REGISTRY:-}" ]; then
