@@ -186,6 +186,10 @@ else
   echo "POSTGRES_PASSWORD loaded from environment variable or defaulting to REPMGRPWD"
 fi
 
+MSLIST=${MSLIST:-myservice}
+MSOWNERPWDLIST=${MSOWNERPWDLIST:-myservice_owner}
+MSUSERPWDLIST=${MSUSERPWDLIST:-myservice_user}
+
 FAILOVER_ON_BACKEND_ERROR=${FAILOVER_ON_BACKEND_ERROR:-off}
 echo FAILOVER_ON_BACKEND_ERROR=${FAILOVER_ON_BACKEND_ERROR}
 CONNECTION_CACHE=${CONNECTION_CACHE:-on}
@@ -279,19 +283,16 @@ fi
 
 echo "Create user hcuser (fails if the hcuser already exists, which is ok)"
 ssh -p 222 ${REPMGR_MASTER} "psql -c \"create user hcuser with login password 'hcuser';\""
-echo "Generate pool_passwd file from ${DBHOST}"
+echo "Generate pool_passwd file from known passwords"
 touch ${CONFIG_DIR}/pool_passwd
 
-# Fetch all user passwords from backend database first
-ssh -p 222 postgres@${DBHOST} "psql -t -A -c \"select rolname || ':' || rolpassword from pg_authid where rolpassword is not null;\"" | while IFS=: read f1 f2
-do
- # Only add if password hash exists and starts with md5 or SCRAM
- if [[ "$f2" =~ ^(md5|SCRAM-SHA-256) ]]; then
-   echo "setting passwd of $f1 in ${CONFIG_DIR}/pool_passwd"
-   sed -i -e "/^${f1}:/d" ${CONFIG_DIR}/pool_passwd
-   echo "$f1:$f2" >> ${CONFIG_DIR}/pool_passwd
- fi
-done
+# Set plain passwords for known users in pool_passwd
+# For SCRAM authentication, pool_passwd must contain plain passwords
+echo "postgres:${POSTGRES_PASSWORD}" >> ${CONFIG_DIR}/pool_passwd
+echo "repmgr:${REPMGRPWD}" >> ${CONFIG_DIR}/pool_passwd
+echo "hcuser:hcuser" >> ${CONFIG_DIR}/pool_passwd
+echo "${MSLIST}_owner:${MSOWNERPWDLIST}" >> ${CONFIG_DIR}/pool_passwd
+echo "${MSLIST}_user:${MSUSERPWDLIST}" >> ${CONFIG_DIR}/pool_passwd
 
 echo "Pool passwd file contents:"
 cat ${CONFIG_DIR}/pool_passwd
