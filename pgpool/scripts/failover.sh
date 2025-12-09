@@ -10,7 +10,7 @@ LOGFILE=/var/log/pg/failover.log
 if [ ! -f $LOGFILE ] ; then
  > $LOGFILE
 fi
-PGVER=${PGVER:-12}
+PGVER=${PGVER:-17}
 echo $@
 
 # Special values:
@@ -49,10 +49,10 @@ echo "OLD_MASTER_ID: $OLD_MASTER_ID"
 echo "OLD_PRIMARY_ID: $OLD_PRIMARY_ID"
 echo "NEW_PORT: $NEW_PORT"
 echo "NEW_CLUSTER_PATH: $NEW_CLUSTER_PATH"
- 
+
 ssh_options="ssh -p 222 -n -T -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 set -x
- 
+
 if [ $FALLING_NODE = $OLD_PRIMARY_ID ] ; then
   $ssh_options postgres@${NEW_HOST} "/usr/lib/postgresql/${PGVER}/bin/repmgr --log-to-file -f /etc/repmgr/${PGVER}/repmgr.conf standby promote -v "
 else

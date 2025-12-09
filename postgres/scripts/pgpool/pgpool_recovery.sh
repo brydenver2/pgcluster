@@ -9,7 +9,7 @@
 #
 # Be sure to set up public SSH keys and authorized_keys files.
 # this script must be in PGDATA
-PGVER=${PGVER:-12}
+PGVER=${PGVER:-17}
 PATH=$PATH:/usr/lib/postgresql/${PGVER}/bin
 ARCHIVE_DIR=/archive
 
@@ -38,7 +38,7 @@ check_ssh_connectivity() {
     local max_retries=3
     local retry_delay=2
     local attempt=1
-    
+
     while [ $attempt -le $max_retries ]; do
         echo "Checking SSH connectivity to $host (attempt $attempt/$max_retries)"
         if ssh -p 222 -n -T -o ConnectTimeout=5 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no postgres@$host "echo 'SSH OK'" > /dev/null 2>&1; then
@@ -51,7 +51,7 @@ check_ssh_connectivity() {
         fi
         attempt=$((attempt + 1))
     done
-    
+
     echo "ERROR: Failed to establish SSH connection to $host after $max_retries attempts"
     return 1
 }
@@ -63,7 +63,7 @@ ssh_exec() {
     local cmd="$@"
     local max_retries=2
     local attempt=1
-    
+
     while [ $attempt -le $max_retries ]; do
         echo "Executing via SSH on $host: $cmd"
         if ssh -p 222 -n -T -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no postgres@$host "$cmd"; then
@@ -75,7 +75,7 @@ ssh_exec() {
         fi
         attempt=$((attempt + 1))
     done
-    
+
     echo "ERROR: SSH command failed after $max_retries attempts: $cmd"
     return 1
 }
@@ -85,9 +85,9 @@ primary_host=$NODE_NAME
 replica_host=$2
 replica_path=$3
 (
-echo "primary_host: ${primary_host}" 
-echo "replica_host: ${replica_host}" 
-echo "replica_path: ${replica_path}" 
+echo "primary_host: ${primary_host}"
+echo "replica_host: ${replica_host}"
+echo "replica_path: ${replica_path}"
 
 # Check SSH connectivity before proceeding
 if ! check_ssh_connectivity "$replica_host"; then

@@ -338,7 +338,8 @@ backend_flag$NUM = '$FLAG'
 done
 cat <<EOF >> $CONFIG_FILE
 # - Authentication -
-enable_pool_hba = on
+enable_pool_hba = off
+pool_hba_file = '/etc/pgpool-II/pool_hba.conf'
 pool_passwd = 'pool_passwd'
 authentication_timeout = 60
 # - SSL Connections -
@@ -592,11 +593,10 @@ failover_on_backend_error = ${FAILOVER_ON_BACKEND_ERROR}
                                    # If set to off, pgpool will report an
                                    # error and disconnect the session.
 
-search_primary_node_timeout = 0
+search_primary_node_timeout = 300
                                    # Timeout in seconds to search for the
                                    # primary node when a failover occurs.
-                                   # 0 means no timeout, keep searching
-                                   # for a primary node forever.
+                                   # 300 seconds (5 minutes) timeout to prevent infinite waiting.
 
 #------------------------------------------------------------------------------
 # ONLINE RECOVERY
