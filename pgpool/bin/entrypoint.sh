@@ -339,9 +339,10 @@ backend_flag$NUM = '$FLAG'
 done
 cat <<EOF >> $CONFIG_FILE
 # - Authentication -
-enable_pool_hba = off
+enable_pool_hba = on
 pool_hba_file = '/etc/pgpool-II/pool_hba.conf'
 pool_passwd = 'pool_passwd'
+allow_clear_text_frontend_auth = on
 authentication_timeout = 60
 # - SSL Connections -
 ssl = on
