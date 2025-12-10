@@ -342,7 +342,7 @@ cat <<EOF >> $CONFIG_FILE
 enable_pool_hba = on
 pool_hba_file = '/etc/pgpool-II/pool_hba.conf'
 pool_passwd = 'pool_passwd'
-allow_clear_text_frontend_auth = on
+allow_clear_text_frontend_auth = true
 authentication_timeout = 60
 # - SSL Connections -
 ssl = on
