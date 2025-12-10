@@ -339,7 +339,7 @@ backend_flag$NUM = '$FLAG'
 done
 cat <<EOF >> $CONFIG_FILE
 # - Authentication -
-enable_pool_hba = on
+enable_pool_hba = false
 pool_hba_file = '/etc/pgpool-II/pool_hba.conf'
 pool_passwd = 'pool_passwd'
 allow_clear_text_frontend_auth = true
