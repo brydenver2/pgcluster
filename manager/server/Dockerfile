@@ -1,5 +1,4 @@
 FROM debian:12
-MAINTAINER ptim007@yahoo.com
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install Node.js

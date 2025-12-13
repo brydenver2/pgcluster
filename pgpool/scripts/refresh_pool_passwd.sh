@@ -1,6 +1,16 @@
 #!/bin/bash
 # Script to refresh pool_passwd file from backend PostgreSQL database
 # This can be run on-demand without restarting pgpool
+#
+# IMPORTANT: For SCRAM authentication, pool_passwd needs passwords in a format
+# that pgpool can use. Since we cannot retrieve plain passwords from PostgreSQL,
+# this script only updates passwords for users we know the plain password for.
+#
+# For new users created in PostgreSQL:
+# You MUST either:
+# 1. Manually add them: pg_enc -m -u username -p
+# 2. Store plain passwords securely and add them to this script
+# 3. Use enable_pool_hba=on with pool_hba.conf to skip pool_passwd
 
 CONFIG_DIR=/etc/pgpool-II
 POOL_PASSWD_FILE=${CONFIG_DIR}/pool_passwd
@@ -31,6 +41,11 @@ else
   POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-${REPMGRPWD}}
 fi
 
+# Read MSLIST passwords
+MSLIST=${MSLIST:-myservice}
+MSOWNERPWDLIST=${MSOWNERPWDLIST:-myservice_owner}
+MSUSERPWDLIST=${MSUSERPWDLIST:-myservice_user}
+
 # Setup pgpass for connections
 echo "*:*:repmgr:repmgr:${REPMGRPWD}" > /tmp/.pgpass_refresh
 chmod 600 /tmp/.pgpass_refresh
@@ -42,23 +57,39 @@ if [ -f "${POOL_PASSWD_FILE}" ]; then
   echo "Backed up existing pool_passwd to ${POOL_PASSWD_FILE}.bak"
 fi
 
-# Create new pool_passwd file
-touch ${POOL_PASSWD_FILE}
+# Create new pool_passwd file with known users and plain passwords
+# For SCRAM authentication, pgpool needs plain passwords or AES encrypted passwords
+echo "Recreating pool_passwd with known users..."
+> ${POOL_PASSWD_FILE}
 
-# Note: We don't manually add postgres here - it will be fetched from pg_authid below
-# This ensures the hash matches what's in PostgreSQL (SCRAM-SHA-256 or other)
+# Add known users with plain passwords
+echo "postgres:${POSTGRES_PASSWORD}" >> ${POOL_PASSWD_FILE}
+echo "repmgr:${REPMGRPWD}" >> ${POOL_PASSWD_FILE}
+echo "hcuser:hcuser" >> ${POOL_PASSWD_FILE}
+echo "${MSLIST}_owner:${MSOWNERPWDLIST}" >> ${POOL_PASSWD_FILE}
+echo "${MSLIST}_user:${MSUSERPWDLIST}" >> ${POOL_PASSWD_FILE}
 
-# Fetch all user passwords from backend database via SSH
-echo "Fetching user passwords from ${DBHOST}..."
-ssh -p 222 postgres@${DBHOST} "psql -t -A -c \"select rolname || ':' || rolpassword from pg_authid where rolpassword is not null;\"" 2>/dev/null | while IFS=: read f1 f2
-do
-  # Only add if password hash exists and starts with md5 or SCRAM
-  if [[ "$f2" =~ ^(md5|SCRAM-SHA-256) ]]; then
-    echo "Adding user: $f1"
-    sed -i -e "/^${f1}:/d" ${POOL_PASSWD_FILE}
-    echo "$f1:$f2" >> ${POOL_PASSWD_FILE}
-  fi
-done
+echo "Added known users: postgres, repmgr, hcuser, ${MSLIST}_owner, ${MSLIST}_user"
+
+# Check for additional users in PostgreSQL and warn if they exist
+echo ""
+echo "Checking for additional database users..."
+ADDITIONAL_USERS=$(ssh -p 222 postgres@${DBHOST} "psql -t -A -c \"select rolname from pg_authid where rolpassword is not null and rolname not in ('postgres', 'repmgr', 'hcuser', '${MSLIST}_owner', '${MSLIST}_user') order by rolname;\"" 2>/dev/null)
+
+if [ ! -z "$ADDITIONAL_USERS" ]; then
+  echo ""
+  echo "WARNING: Additional users found in PostgreSQL that are NOT in pool_passwd:"
+  echo "$ADDITIONAL_USERS"
+  echo ""
+  echo "These users will NOT be able to authenticate through pgpool!"
+  echo ""
+  echo "To add them, you must either:"
+  echo "  1. Run: pg_enc -m -u <username> -p"
+  echo "     Then manually add the output to ${POOL_PASSWD_FILE}"
+  echo "  2. Add plain passwords to this script if you know them"
+  echo "  3. Enable pool_hba authentication (set enable_pool_hba=on in pgpool.conf)"
+  echo ""
+fi
 
 # Cleanup temp pgpass
 rm -f /tmp/.pgpass_refresh
