@@ -33,7 +33,7 @@ networks:
 
 services:
   pg01:
-    image: registry.local.wallacearizona.us/pg:1.0.1
+    image: registry.local.wallacearizona.us/pg:1.0.12
     hostname: pg01
     secrets:
       - postgres_password
@@ -92,7 +92,7 @@ services:
         - "com.wallacearizona.cluster=pgcluster"
 
   pg02:
-    image: registry.local.wallacearizona.us/pg:1.0.1
+    image: registry.local.wallacearizona.us/pg:1.0.12
     hostname: pg02
     secrets:
       - postgres_password
@@ -151,7 +151,7 @@ services:
         - "com.wallacearizona.cluster=pgcluster"
 
   pg03:
-    image: registry.local.wallacearizona.us/pg:1.0.1
+    image: registry.local.wallacearizona.us/pg:1.0.12
     hostname: pg03
     secrets:
       - postgres_password
@@ -210,7 +210,7 @@ services:
         - "com.wallacearizona.cluster=pgcluster"
 
   pgpool:
-    image: registry.local.wallacearizona.us/pgpool:1.0.2
+    image: registry.local.wallacearizona.us/pgpool:1.0.12
     hostname: pgpool
     secrets:
       - postgres_password
@@ -275,7 +275,7 @@ services:
         - "traefik.tcp.services.pgpool.loadbalancer.server.port=9999"
 
   manager:
-    image: registry.local.wallacearizona.us/manager:1.0.1
+    image: registry.local.wallacearizona.us/manager:1.0.12
     hostname: manager
     secrets:
       - repmgr_password
