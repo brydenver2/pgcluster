@@ -3,16 +3,40 @@ version: '3.8'
 volumes:
   pg01db:
     driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/mnt/docker-cephFS/postgres/pg01db"
   pg02db:
     driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/mnt/docker-cephFS/postgres/pg02db"
   pg03db:
     driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/mnt/docker-cephFS/postgres/pg03db"
   pg01arc:
     driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/mnt/docker-cephFS/postgres/pg01arc"
   pg02arc:
     driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/mnt/docker-cephFS/postgres/pg02arc"
   pg03arc:
     driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/mnt/docker-cephFS/postgres/pg03arc"
 
 secrets:
   postgres_password:
@@ -47,7 +71,7 @@ services:
       MSUSERPWDLIST: "myservice_user"
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       REPMGRPWD_FILE: /run/secrets/repmgr_password
-      REPMGRD_FAILOVER_MODE: manual
+      REPMGRD_FAILOVER_MODE: automatic
       PGMASTER: pg01
     ports:
       - target: 5432
@@ -106,7 +130,7 @@ services:
       MSUSERPWDLIST: "myservice_user"
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       REPMGRPWD_FILE: /run/secrets/repmgr_password
-      REPMGRD_FAILOVER_MODE: manual
+      REPMGRD_FAILOVER_MODE: automatic
       PGMASTER: pg01
     ports:
       - target: 5432
@@ -165,7 +189,7 @@ services:
       MSUSERPWDLIST: "myservice_user"
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       REPMGRPWD_FILE: /run/secrets/repmgr_password
-      REPMGRD_FAILOVER_MODE: manual
+      REPMGRD_FAILOVER_MODE: automatic
       PGMASTER: pg01
     ports:
       - target: 5432
@@ -227,7 +251,7 @@ services:
       PGPOOL_FAILOVER_ON_BACKEND_ERROR: "off"
       PGPOOL_HEALTH_CHECK_PERIOD: 5
       PGPOOL_NUM_INIT_CHILDREN: 50
-      PGPOOL_LOAD_BALANCE_MODE: "no"
+      PGPOOL_LOAD_BALANCE_MODE: "on"
       PGPOOL_LOG_CONNECTIONS: "off"
       # Optional: Enable automatic pool_passwd refresh via cron
       # Format: "minute hour day month dayofweek"
